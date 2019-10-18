@@ -30,8 +30,7 @@ class AdjListGraph(AbstractGraph):
             self.vertexes.add(node)
             self.adj_list[node.name] = []
             return True
-        else:
-            return False
+        return False
 
     def add_edge(self, src, dst, weight=1) -> bool:
         """
