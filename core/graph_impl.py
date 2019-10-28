@@ -99,27 +99,26 @@ class AdjListGraph(AbstractGraph):
                         nearest = node.name
             return nearest
 
-        if self[origin]:
-            unvisited = [v.name for v in self.vertexes if v.name != origin]
-            costs = {v.name: float("inf") for v in self.vertexes}
-            costs[origin] = 0
-            paths = {}
-            paths[origin] = [origin]
-            current_node = origin
-            while unvisited:
-                nearest = lowest_cost()
-                if nearest and (nearest in unvisited):
-                    unvisited.remove(nearest)
-                    current_node = nearest
-                else:
-                    current_node = origin
-                    final = True
-                    for node in self.adj_list[origin]:
-                        if node.name in unvisited:
-                            final = False
-                            break
-                    if final:
-                        break
-            return costs, paths
-        else:
+        if not self[origin]:
             raise Exception("There no such node")
+        unvisited = [v.name for v in self.vertexes if v.name != origin]
+        costs = {v.name: float("inf") for v in self.vertexes}
+        costs[origin] = 0
+        paths = {}
+        paths[origin] = [origin]
+        current_node = origin
+        while unvisited:
+            nearest = lowest_cost()
+            if nearest and (nearest in unvisited):
+                unvisited.remove(nearest)
+                current_node = nearest
+            else:
+                current_node = origin
+                final = True
+                for node in self.adj_list[origin]:
+                    if node.name in unvisited:
+                        final = False
+                        break
+                if final:
+                    break
+        return costs, paths
