@@ -1,4 +1,5 @@
 from .abc_structures import *
+from collections import deque
 
 
 class Node(AbstractNode):
@@ -45,6 +46,32 @@ class AdjListGraph(AbstractGraph):
                 self.adj_list[dst].append(adj(src, weight))
             return True
         return False
+
+    def bfs(self, origin, target=None) -> dict:
+        """
+        :param origin: name or id of origin node
+        :param target: node to find path. If target is None all paths will be returned
+        :return: path to target or path to all nodes if target is not specified
+        """
+        if not self[target]:
+            raise Exception("There no target node in graph")
+        visited = set()
+        visited.add(origin)
+        queue = deque()
+        queue.append(origin)
+        paths = {origin: [origin]}
+        while queue:
+            node = queue.pop()
+            for child in self.adj_list[node]:
+                if child.name not in paths:
+                    paths[child.name] = paths[node] + [child.name]
+                else:
+                    paths[child.name] += [child.name]
+                if (target is not None) and (child.name == target):
+                    return {target: paths[target]}
+                visited.add(child.name)
+                queue.appendleft(child.name)
+        return paths
 
     def dijkstra(self, origin) -> (dict, dict):
         """

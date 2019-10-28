@@ -31,15 +31,19 @@ class AbstractGraph(metaclass=ABCMeta):
         self.oriented = oriented
 
     @abstractmethod
-    def add_node(self, node):
+    def add_node(self, node) -> bool:
         pass
 
     @abstractmethod
-    def add_edge(self, src, dst, weight=1):
+    def add_edge(self, src, dst, weight=1) -> bool:
         pass
 
     @abstractmethod
-    def dijkstra(self, name):
+    def dijkstra(self, name) -> (dict, dict):
+        pass
+
+    @abstractmethod
+    def bfs(self, name, target=None) -> dict:
         pass
 
     def check_node(self, node: AbstractNode) -> bool:
