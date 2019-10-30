@@ -248,6 +248,7 @@ class TestDijkstra:
         assert p.get('D') is None
         assert p['E'] == ['E']
 
+    #
     def test_graph_4(self):
         """
         Тот же граф, добавлена вершина F и ребра C->F, F->E, D<->F
@@ -419,3 +420,44 @@ class TestDijkstra:
         assert p.get('A') is None
         assert p.get('B') is None
         assert p['C'] == ['C']
+
+    def test_7(self):
+        """
+        Грокаем алгоритмы. стр.138, 6.2
+        """
+
+        def graph():
+            g = Graph().create_graph(type='adjList', oriented=True)
+            Cab = Node('Cab')
+            Car = Node('Car')
+            Bar = Node('Bar')
+            Cat = Node('Cat')
+            Bat = Node('Bat')
+            Mat = Node('Mat')
+
+            g.add_node(Cab)
+            g.add_node(Car)
+            g.add_node(Bar)
+            g.add_node(Cat)
+            g.add_node(Bat)
+            g.add_node(Mat)
+
+            g.add_edge('Cab', 'Car')
+            g.add_edge('Cab', 'Cat')
+            g.add_edge('Car', 'Bar')
+            g.add_edge('Car', 'Cat')
+            g.add_edge('Bar', 'Bat')
+            g.add_edge('Cat', 'Bat')
+            g.add_edge('Cat', 'Mat')
+            g.add_edge('Mat', 'Bat')
+            return g
+
+        g = graph()
+        w, p = g.dijkstra('Cab')
+        assert w == {'Cab': 0, 'Car': 1, 'Bar': 2, 'Cat': 1, 'Bat': 2, 'Mat': 2}
+        assert p['Cab'] == ['Cab']
+        assert p['Car'] == ['Cab', 'Car']
+        assert p['Cat'] == ['Cab', 'Cat']
+        assert p['Bar'] == ['Cab', 'Car', 'Bar']
+        assert p['Bat'] == ['Cab', 'Cat', 'Bat']
+        assert p['Mat'] == ['Cab', 'Cat', 'Mat']

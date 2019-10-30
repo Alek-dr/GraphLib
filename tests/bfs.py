@@ -54,3 +54,76 @@ class TestBFS:
         except Exception as ex:
             # TODO : implement exception
             assert ex
+
+    def test_graph_2(self):
+        """
+        Грокаем алгоритмы. стр.137, 6.1
+        """
+
+        def graph():
+            g = Graph().create_graph(type='adjList', oriented=True)
+            nodeS = Node('S')
+            nodeD = Node('D')
+            nodeB = Node('B')
+            nodeE = Node('E')
+            nodeC = Node('C')
+            nodeF = Node('F')
+
+            g.add_node(nodeS)
+            g.add_node(nodeD)
+            g.add_node(nodeB)
+            g.add_node(nodeE)
+            g.add_node(nodeF)
+            g.add_node(nodeC)
+
+            g.add_edge('S', 'D')
+            g.add_edge('S', 'B')
+            g.add_edge('D', 'E')
+            g.add_edge('B', 'E')
+            g.add_edge('B', 'C')
+            g.add_edge('D', 'F')
+            g.add_edge('C', 'F')
+            return g
+
+        g = graph()
+        path = g.bfs('S', 'F')
+        assert path['F'] == ['S', 'D', 'F']
+
+    def test_graph_3(self):
+        """
+        Грокаем алгоритмы. стр.138, 6.2
+        """
+
+        def graph():
+            g = Graph().create_graph(type='adjList', oriented=True)
+            Cab = Node('Cab')
+            Car = Node('Car')
+            Bar = Node('Bar')
+            Cat = Node('Cat')
+            Bat = Node('Bat')
+            Mat = Node('Mat')
+
+            g.add_node(Cab)
+            g.add_node(Car)
+            g.add_node(Bar)
+            g.add_node(Cat)
+            g.add_node(Bat)
+            g.add_node(Mat)
+
+            g.add_edge('Cab', 'Car')
+            g.add_edge('Cab', 'Cat')
+            g.add_edge('Car', 'Bar')
+            g.add_edge('Car', 'Cat')
+            g.add_edge('Bar', 'Bat')
+            g.add_edge('Cat', 'Bat')
+            g.add_edge('Cat', 'Mat')
+            g.add_edge('Mat', 'Bat')
+            return g
+
+        g = graph()
+        path = g.bfs('Cab', 'Bat')
+        assert path['Bat'] == ['Cab', 'Cat', 'Bat']
+        path = g.bfs('Cab', 'Mat')
+        assert path['Mat'] == ['Cab', 'Cat', 'Mat']
+        path = g.bfs('Cab', 'Bar')
+        assert path['Bar'] == ['Cab', 'Car', 'Bar']

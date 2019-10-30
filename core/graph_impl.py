@@ -51,9 +51,15 @@ class AdjListGraph(AbstractGraph):
         """
         :param origin: name or id of origin node
         :param target: node to find path. If target is None all paths will be returned
-        :return: path to target or path to all nodes if target is not specified
+        :return: shortest path to target or all possible paths to all nodes if target is not specified
         """
-        if not self[target]:
+
+        def multiple_paths(item):
+            if (len(item) > 1) and (isinstance(item[1], list)):
+                return True
+            return False
+
+        if (target is not None) and (not self[target]):
             raise Exception("There no target node in graph")
         visited = set()
         visited.add(origin)
@@ -64,11 +70,36 @@ class AdjListGraph(AbstractGraph):
             node = queue.pop()
             for child in self.adj_list[node]:
                 if child.name not in paths:
-                    paths[child.name] = paths[node] + [child.name]
+                    if multiple_paths(paths[node]):
+                        # If there are multiple ways to node
+                        paths[child.name] = paths[node][0] + [child.name]
+                        for i in range(1, len(paths[node])):
+                            paths[child.name] = [paths[child.name], paths[node][i] + [child.name]]
+                    else:
+                        paths[child.name] = paths[node] + [child.name]
                 else:
-                    paths[child.name] += [child.name]
+                    m_node_paths, m_child_paths = multiple_paths(paths[node]), multiple_paths(paths[child.name])
+                    if (m_node_paths + m_child_paths) == False:
+                        # There are only one way to child and one way to node
+                        paths[child.name] = [paths[child.name], paths[node] + [child.name]]
+                    elif m_node_paths and (not m_child_paths):
+                        # Multiple ways to node and only one to child
+                        for i in range(len(paths[child.name])):
+                            paths[child.name][i] = paths[child.name][i] + paths[node]
+                    elif m_child_paths and (not m_node_paths):
+                        # Multiple ways to chile and only one to node
+                        paths[child.name].append(paths[node] + [child.name])
+                    else:
+                        # Multiple ways for child and node
+                        for i in range(len(paths[node])):
+                            path = paths[node][i] + [child.name]
+                            if path not in paths[child.name]:
+                                paths[child.name].append(path)
                 if (target is not None) and (child.name == target):
-                    return {target: paths[target]}
+                    if multiple_paths(paths[target]):
+                        return {target: min(paths[target], key=lambda x: len(x))}
+                    else:
+                        return {target: paths[target]}
                 visited.add(child.name)
                 queue.appendleft(child.name)
         return paths
@@ -78,27 +109,6 @@ class AdjListGraph(AbstractGraph):
         :param origin: name or id of origin node
         :return: dict of shortest paths weights, dict of paths
         """
-
-        def lowest_cost():
-            # find any not visited adjacent node
-            nearest = None
-            for node in self.adj_list[current_node]:
-                if node.name in unvisited:
-                    nearest = node.name
-                    break
-            if nearest is None:
-                return nearest
-
-            for node in self.adj_list[current_node]:
-                if node.name in unvisited:
-                    d = node.weight + costs[current_node]
-                    if costs[node.name] > d:
-                        costs[node.name] = d
-                        paths[node.name] = paths[current_node] + [node.name]
-                    if d < costs[nearest]:
-                        nearest = node.name
-            return nearest
-
         if not self[origin]:
             raise Exception("There no such node")
         unvisited = [v.name for v in self.vertexes if v.name != origin]
@@ -108,17 +118,18 @@ class AdjListGraph(AbstractGraph):
         paths[origin] = [origin]
         current_node = origin
         while unvisited:
-            nearest = lowest_cost()
-            if nearest and (nearest in unvisited):
-                unvisited.remove(nearest)
-                current_node = nearest
-            else:
-                current_node = origin
-                final = True
-                for node in self.adj_list[origin]:
-                    if node.name in unvisited:
-                        final = False
-                        break
-                if final:
-                    break
+            for node in self.adj_list[current_node]:
+                if node.name in unvisited:
+                    d = node.weight + costs[current_node]
+                    if costs[node.name] > d:
+                        costs[node.name] = d
+                        paths[node.name] = paths[current_node] + [node.name]
+            nearest = unvisited[0]
+            min_w = costs[nearest]
+            for node in unvisited:
+                if costs[node] < min_w:
+                    min_w = costs[node]
+                    nearest = node
+            unvisited.remove(nearest)
+            current_node = nearest
         return costs, paths
