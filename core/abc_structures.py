@@ -46,6 +46,10 @@ class AbstractGraph(metaclass=ABCMeta):
     def bfs(self, name, target=None) -> dict:
         pass
 
+    @abstractmethod
+    def dfs(self, name, target=None) -> dict:
+        pass
+
     def check_node(self, node: AbstractNode) -> bool:
         for n in self.vertexes:
             if n.name == node.name:

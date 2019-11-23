@@ -47,18 +47,54 @@ class AdjListGraph(AbstractGraph):
             return True
         return False
 
+    @staticmethod
+    def multiple_paths(item):
+        if (len(item) > 1) and (isinstance(item[1], list)):
+            return True
+        return False
+
+    def _make_path_(self, child, node, paths):
+        """
+        :param child: child node name
+        :param node: current node name
+        :param paths: dict of paths
+        :return: pathd
+        """
+        if child.name not in paths:
+            if self.multiple_paths(paths[node]):
+                # If there are multiple ways to node
+                paths[child.name] = paths[node][0] + [child.name]
+                for i in range(1, len(paths[node])):
+                    paths[child.name] = [paths[child.name], paths[node][i] + [child.name]]
+            else:
+                paths[child.name] = paths[node] + [child.name]
+        else:
+            m_node_paths, m_child_paths = self.multiple_paths(paths[node]), self.multiple_paths(
+                paths[child.name])
+            if not (m_node_paths + m_child_paths):
+                # There are only one way to child and one way to node
+                paths[child.name] = [paths[child.name], paths[node] + [child.name]]
+            elif m_node_paths and (not m_child_paths):
+                # Multiple ways to node and only one to child
+                for i in range(len(paths[child.name])):
+                    paths[child.name][i] = paths[child.name][i] + paths[node]
+            elif m_child_paths and (not m_node_paths):
+                # Multiple ways to child and only one to node
+                paths[child.name].append(paths[node] + [child.name])
+            else:
+                # Multiple ways for child and node
+                for i in range(len(paths[node])):
+                    path = paths[node][i] + [child.name]
+                    if path not in paths[child.name]:
+                        paths[child.name].append(path)
+        return paths
+
     def bfs(self, origin, target=None) -> dict:
         """
         :param origin: name or id of origin node
         :param target: node to find path. If target is None all paths will be returned
         :return: shortest path to target or all possible paths to all nodes if target is not specified
         """
-
-        def multiple_paths(item):
-            if (len(item) > 1) and (isinstance(item[1], list)):
-                return True
-            return False
-
         if (target is not None) and (not self[target]):
             raise Exception("There no target node in graph")
         visited = set()
@@ -69,39 +105,40 @@ class AdjListGraph(AbstractGraph):
         while queue:
             node = queue.pop()
             for child in self.adj_list[node]:
-                if child.name not in paths:
-                    if multiple_paths(paths[node]):
-                        # If there are multiple ways to node
-                        paths[child.name] = paths[node][0] + [child.name]
-                        for i in range(1, len(paths[node])):
-                            paths[child.name] = [paths[child.name], paths[node][i] + [child.name]]
-                    else:
-                        paths[child.name] = paths[node] + [child.name]
-                else:
-                    m_node_paths, m_child_paths = multiple_paths(paths[node]), multiple_paths(paths[child.name])
-                    if (m_node_paths + m_child_paths) == False:
-                        # There are only one way to child and one way to node
-                        paths[child.name] = [paths[child.name], paths[node] + [child.name]]
-                    elif m_node_paths and (not m_child_paths):
-                        # Multiple ways to node and only one to child
-                        for i in range(len(paths[child.name])):
-                            paths[child.name][i] = paths[child.name][i] + paths[node]
-                    elif m_child_paths and (not m_node_paths):
-                        # Multiple ways to chile and only one to node
-                        paths[child.name].append(paths[node] + [child.name])
-                    else:
-                        # Multiple ways for child and node
-                        for i in range(len(paths[node])):
-                            path = paths[node][i] + [child.name]
-                            if path not in paths[child.name]:
-                                paths[child.name].append(path)
+                paths = self._make_path_(child, node, paths)
                 if (target is not None) and (child.name == target):
-                    if multiple_paths(paths[target]):
+                    if self.multiple_paths(paths[target]):
                         return {target: min(paths[target], key=lambda x: len(x))}
                     else:
                         return {target: paths[target]}
                 visited.add(child.name)
                 queue.appendleft(child.name)
+        return paths
+
+    def dfs(self, origin, target=None) -> dict:
+        """
+        :param origin: name or id of origin node
+        :param target: node to find path. If target is None all paths will be returned
+        :return: shortest path to target or all possible paths to all nodes if target is not specified
+        """
+        if (target is not None) and (not self[target]):
+            raise Exception("There no target node in graph")
+        queue = deque()
+        queue.append(origin)
+        visited = set()
+        paths = {origin: [origin]}
+        while queue:
+            node = queue.pop()
+            if node not in visited:
+                visited.add(node)
+                for child in self.adj_list[node]:
+                    queue.append(child.name)
+                    paths = self._make_path_(child, node, paths)
+        if target is not None:
+            if self.multiple_paths(paths[target]):
+                return {target: min(paths[target], key=lambda x: len(x))}
+            else:
+                return {target: paths[target]}
         return paths
 
     def dijkstra(self, origin) -> (dict, dict):
