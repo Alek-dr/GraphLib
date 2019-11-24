@@ -61,3 +61,7 @@ class AbstractGraph(metaclass=ABCMeta):
             if v.name == item:
                 return v
         return None
+
+    def __delitem__(self, key):
+        v = self[key]
+        self.vertexes.remove(v)

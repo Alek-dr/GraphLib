@@ -22,6 +22,11 @@ class AdjListGraph(AbstractGraph):
         super().__init__(oriented)
         self.adj_list = {}
 
+    def __delitem__(self, key):
+        super().__delitem__(key)
+        del self.adj_list[key]
+        [childs.remove(node) for childs in self.adj_list.values() for node in childs if node.name == key]
+
     def add_node(self, node: AbstractNode) -> bool:
         """
         :param node: AbstractNode implementation
