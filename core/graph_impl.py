@@ -27,6 +27,27 @@ class AdjListGraph(AbstractGraph):
         del self.adj_list[key]
         [childs.remove(node) for childs in self.adj_list.values() for node in childs if node.name == key]
 
+    def remove_edge(self, src, dst) -> bool:
+        """
+       :param src: name or id of source node
+       :param dst: name or id of dst node
+       :return: true if edge removed sucessfully, false otherwise
+       """
+        if self[src] and self[dst]:
+            childs = self.adj_list[src]
+            for node in childs:
+                if node.name == dst:
+                    childs.remove(node)
+                    break
+            if not self.oriented:
+                childs = self.adj_list[dst]
+                for node in childs:
+                    if node.name == src:
+                        childs.remove(node)
+                        break
+            return True
+        return False
+
     def add_node(self, node: AbstractNode) -> bool:
         """
         :param node: AbstractNode implementation

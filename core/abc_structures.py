@@ -50,6 +50,10 @@ class AbstractGraph(metaclass=ABCMeta):
     def dfs(self, name, target=None) -> dict:
         pass
 
+    @abstractmethod
+    def remove_edge(self, src, dst) -> bool:
+        pass
+
     def check_node(self, node: AbstractNode) -> bool:
         for n in self.vertexes:
             if n.name == node.name:
