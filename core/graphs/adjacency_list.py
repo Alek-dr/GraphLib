@@ -1,22 +1,12 @@
-from .abc_structures import *
-from collections import deque
-
-
-class Node(AbstractNode):
-
-    def __init__(self, name):
-        super().__init__(name)
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, val):
-        self._name = val
+from core.graphs.graph import AbstractGraph, adj
+from core.graphs.node import AbstractNode
 
 
 class AdjListGraph(AbstractGraph):
+
+    """
+    Graph implementation as adjacency list
+    """
 
     def __init__(self, oriented=False):
         super().__init__(oriented)
@@ -115,83 +105,83 @@ class AdjListGraph(AbstractGraph):
                         paths[child.name].append(path)
         return paths
 
-    def bfs(self, origin, target=None) -> dict:
-        """
-        :param origin: name or id of origin node
-        :param target: node to find path. If target is None all paths will be returned
-        :return: shortest path to target or all possible paths to all nodes if target is not specified
-        """
-        if (target is not None) and (not self[target]):
-            raise Exception("There no target node in graph")
-        visited = set()
-        visited.add(origin)
-        queue = deque()
-        queue.append(origin)
-        paths = {origin: [origin]}
-        while queue:
-            node = queue.pop()
-            for child in self.adj_list[node]:
-                paths = self._make_path_(child, node, paths)
-                if (target is not None) and (child.name == target):
-                    if self.multiple_paths(paths[target]):
-                        return {target: min(paths[target], key=lambda x: len(x))}
-                    else:
-                        return {target: paths[target]}
-                visited.add(child.name)
-                queue.appendleft(child.name)
-        return paths
-
-    def dfs(self, origin, target=None) -> dict:
-        """
-        :param origin: name or id of origin node
-        :param target: node to find path. If target is None all paths will be returned
-        :return: shortest path to target or all possible paths to all nodes if target is not specified
-        """
-        if (target is not None) and (not self[target]):
-            raise Exception("There no target node in graph")
-        queue = deque()
-        queue.append(origin)
-        visited = set()
-        paths = {origin: [origin]}
-        while queue:
-            node = queue.pop()
-            if node not in visited:
-                visited.add(node)
-                for child in self.adj_list[node]:
-                    queue.append(child.name)
-                    paths = self._make_path_(child, node, paths)
-        if target is not None:
-            if self.multiple_paths(paths[target]):
-                return {target: min(paths[target], key=lambda x: len(x))}
-            else:
-                return {target: paths[target]}
-        return paths
-
-    def dijkstra(self, origin) -> (dict, dict):
-        """
-        :param origin: name or id of origin node
-        :return: dict of shortest paths weights, dict of paths
-        """
-        if not self[origin]:
-            raise Exception("There no such node")
-        unvisited = [v.name for v in self.vertexes if v.name != origin]
-        costs = {v.name: float("inf") for v in self.vertexes}
-        costs[origin] = 0
-        paths = {origin: [origin]}
-        current_node = origin
-        while unvisited:
-            for node in self.adj_list[current_node]:
-                if node.name in unvisited:
-                    d = node.weight + costs[current_node]
-                    if costs[node.name] > d:
-                        costs[node.name] = d
-                        paths[node.name] = paths[current_node] + [node.name]
-            nearest = unvisited[0]
-            min_w = costs[nearest]
-            for node in unvisited:
-                if costs[node] < min_w:
-                    min_w = costs[node]
-                    nearest = node
-            unvisited.remove(nearest)
-            current_node = nearest
-        return costs, paths
+    # def bfs(self, origin, target=None) -> dict:
+    #     """
+    #     :param origin: name or id of origin node
+    #     :param target: node to find path. If target is None all paths will be returned
+    #     :return: shortest path to target or all possible paths to all nodes if target is not specified
+    #     """
+    #     if (target is not None) and (not self[target]):
+    #         raise Exception("There no target node in graph")
+    #     visited = set()
+    #     visited.add(origin)
+    #     queue = deque()
+    #     queue.append(origin)
+    #     paths = {origin: [origin]}
+    #     while queue:
+    #         node = queue.pop()
+    #         for child in self.adj_list[node]:
+    #             paths = self._make_path_(child, node, paths)
+    #             if (target is not None) and (child.name == target):
+    #                 if self.multiple_paths(paths[target]):
+    #                     return {target: min(paths[target], key=lambda x: len(x))}
+    #                 else:
+    #                     return {target: paths[target]}
+    #             visited.add(child.name)
+    #             queue.appendleft(child.name)
+    #     return paths
+    #
+    # def dfs(self, origin, target=None) -> dict:
+    #     """
+    #     :param origin: name or id of origin node
+    #     :param target: node to find path. If target is None all paths will be returned
+    #     :return: shortest path to target or all possible paths to all nodes if target is not specified
+    #     """
+    #     if (target is not None) and (not self[target]):
+    #         raise Exception("There no target node in graph")
+    #     queue = deque()
+    #     queue.append(origin)
+    #     visited = set()
+    #     paths = {origin: [origin]}
+    #     while queue:
+    #         node = queue.pop()
+    #         if node not in visited:
+    #             visited.add(node)
+    #             for child in self.adj_list[node]:
+    #                 queue.append(child.name)
+    #                 paths = self._make_path_(child, node, paths)
+    #     if target is not None:
+    #         if self.multiple_paths(paths[target]):
+    #             return {target: min(paths[target], key=lambda x: len(x))}
+    #         else:
+    #             return {target: paths[target]}
+    #     return paths
+    #
+    # def dijkstra(self, origin) -> (dict, dict):
+    #     """
+    #     :param origin: name or id of origin node
+    #     :return: dict of shortest paths weights, dict of paths
+    #     """
+    #     if not self[origin]:
+    #         raise Exception("There no such node")
+    #     unvisited = [v.name for v in self.vertexes if v.name != origin]
+    #     costs = {v.name: float("inf") for v in self.vertexes}
+    #     costs[origin] = 0
+    #     paths = {origin: [origin]}
+    #     current_node = origin
+    #     while unvisited:
+    #         for node in self.adj_list[current_node]:
+    #             if node.name in unvisited:
+    #                 d = node.weight + costs[current_node]
+    #                 if costs[node.name] > d:
+    #                     costs[node.name] = d
+    #                     paths[node.name] = paths[current_node] + [node.name]
+    #         nearest = unvisited[0]
+    #         min_w = costs[nearest]
+    #         for node in unvisited:
+    #             if costs[node] < min_w:
+    #                 min_w = costs[node]
+    #                 nearest = node
+    #         unvisited.remove(nearest)
+    #         current_node = nearest
+    #     return costs, paths
