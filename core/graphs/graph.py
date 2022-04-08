@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
+from typing import Union
 
 from .node import AbstractNode
 
@@ -20,17 +21,15 @@ class AbstractGraph(metaclass=ABCMeta):
     def add_edge(self, src, dst, weight=1) -> bool:
         pass
 
-    # @abstractmethod
-    # def dijkstra(self, name) -> (dict, dict):
-    #     pass
-    #
-    # @abstractmethod
-    # def bfs(self, name, target=None) -> dict:
-    #     pass
-    #
-    # @abstractmethod
-    # def dfs(self, name, target=None) -> dict:
-    #     pass
+    @abstractmethod
+    def _get_paths(self, child, node, paths):
+        """
+        :param child: child node name
+        :param node: current node name
+        :param paths: dict of paths
+        :return: paths
+        """
+        pass
 
     @abstractmethod
     def remove_edge(self, src, dst) -> bool:
@@ -43,7 +42,11 @@ class AbstractGraph(metaclass=ABCMeta):
                 return False
         return True
 
-    def __getitem__(self, item):
+    @abstractmethod
+    def get_adj_nodes(self, node_name: Union[str, id]) -> adj:
+        pass
+
+    def __getitem__(self, item: Union[str, int]):
         for v in self.vertexes:
             if v.name == item:
                 return v

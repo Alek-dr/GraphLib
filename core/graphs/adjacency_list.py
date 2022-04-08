@@ -1,9 +1,11 @@
+from typing import Union, Dict
+
+from core.algorithms.utils import has_multiple_paths
 from core.graphs.graph import AbstractGraph, adj
 from core.graphs.node import AbstractNode
 
 
 class AdjListGraph(AbstractGraph):
-
     """
     Graph implementation as adjacency list
     """
@@ -15,7 +17,11 @@ class AdjListGraph(AbstractGraph):
     def __delitem__(self, key):
         super().__delitem__(key)
         del self.adj_list[key]
-        [childs.remove(node) for childs in self.adj_list.values() for node in childs if node.name == key]
+        for childs in self.adj_list.values():
+            for node in childs:
+                if node.name == key:
+                    childs.remove(node)
+        # [childs.remove(node) for childs in self.adj_list.values() for node in childs if node.name == key]
 
     def remove_edge(self, src, dst) -> bool:
         """
@@ -63,21 +69,19 @@ class AdjListGraph(AbstractGraph):
             return True
         return False
 
-    @staticmethod
-    def multiple_paths(item):
-        if (len(item) > 1) and (isinstance(item[1], list)):
-            return True
-        return False
+    def get_adj_nodes(self, node_name: Union[str, id]) -> adj:
+        for item in self.adj_list[node_name]:
+            yield item
 
-    def _make_path_(self, child, node, paths):
+    def _get_paths(self, child, node, paths) -> Dict:
         """
         :param child: child node name
         :param node: current node name
         :param paths: dict of paths
-        :return: pathd
+        :return: paths
         """
         if child.name not in paths:
-            if self.multiple_paths(paths[node]):
+            if has_multiple_paths(paths[node]):
                 # If there are multiple ways to node
                 paths[child.name] = paths[node][0] + [child.name]
                 for i in range(1, len(paths[node])):
@@ -85,7 +89,7 @@ class AdjListGraph(AbstractGraph):
             else:
                 paths[child.name] = paths[node] + [child.name]
         else:
-            m_node_paths, m_child_paths = self.multiple_paths(paths[node]), self.multiple_paths(
+            m_node_paths, m_child_paths = has_multiple_paths(paths[node]), has_multiple_paths(
                 paths[child.name])
             if not (m_node_paths + m_child_paths):
                 # There are only one way to child and one way to node
@@ -104,84 +108,3 @@ class AdjListGraph(AbstractGraph):
                     if path not in paths[child.name]:
                         paths[child.name].append(path)
         return paths
-
-    # def bfs(self, origin, target=None) -> dict:
-    #     """
-    #     :param origin: name or id of origin node
-    #     :param target: node to find path. If target is None all paths will be returned
-    #     :return: shortest path to target or all possible paths to all nodes if target is not specified
-    #     """
-    #     if (target is not None) and (not self[target]):
-    #         raise Exception("There no target node in graph")
-    #     visited = set()
-    #     visited.add(origin)
-    #     queue = deque()
-    #     queue.append(origin)
-    #     paths = {origin: [origin]}
-    #     while queue:
-    #         node = queue.pop()
-    #         for child in self.adj_list[node]:
-    #             paths = self._make_path_(child, node, paths)
-    #             if (target is not None) and (child.name == target):
-    #                 if self.multiple_paths(paths[target]):
-    #                     return {target: min(paths[target], key=lambda x: len(x))}
-    #                 else:
-    #                     return {target: paths[target]}
-    #             visited.add(child.name)
-    #             queue.appendleft(child.name)
-    #     return paths
-    #
-    # def dfs(self, origin, target=None) -> dict:
-    #     """
-    #     :param origin: name or id of origin node
-    #     :param target: node to find path. If target is None all paths will be returned
-    #     :return: shortest path to target or all possible paths to all nodes if target is not specified
-    #     """
-    #     if (target is not None) and (not self[target]):
-    #         raise Exception("There no target node in graph")
-    #     queue = deque()
-    #     queue.append(origin)
-    #     visited = set()
-    #     paths = {origin: [origin]}
-    #     while queue:
-    #         node = queue.pop()
-    #         if node not in visited:
-    #             visited.add(node)
-    #             for child in self.adj_list[node]:
-    #                 queue.append(child.name)
-    #                 paths = self._make_path_(child, node, paths)
-    #     if target is not None:
-    #         if self.multiple_paths(paths[target]):
-    #             return {target: min(paths[target], key=lambda x: len(x))}
-    #         else:
-    #             return {target: paths[target]}
-    #     return paths
-    #
-    # def dijkstra(self, origin) -> (dict, dict):
-    #     """
-    #     :param origin: name or id of origin node
-    #     :return: dict of shortest paths weights, dict of paths
-    #     """
-    #     if not self[origin]:
-    #         raise Exception("There no such node")
-    #     unvisited = [v.name for v in self.vertexes if v.name != origin]
-    #     costs = {v.name: float("inf") for v in self.vertexes}
-    #     costs[origin] = 0
-    #     paths = {origin: [origin]}
-    #     current_node = origin
-    #     while unvisited:
-    #         for node in self.adj_list[current_node]:
-    #             if node.name in unvisited:
-    #                 d = node.weight + costs[current_node]
-    #                 if costs[node.name] > d:
-    #                     costs[node.name] = d
-    #                     paths[node.name] = paths[current_node] + [node.name]
-    #         nearest = unvisited[0]
-    #         min_w = costs[nearest]
-    #         for node in unvisited:
-    #             if costs[node] < min_w:
-    #                 min_w = costs[node]
-    #                 nearest = node
-    #         unvisited.remove(nearest)
-    #         current_node = nearest
-    #     return costs, paths

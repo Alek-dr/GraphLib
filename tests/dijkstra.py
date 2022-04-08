@@ -1,5 +1,4 @@
-from graph import Graph, Node
-import pytest
+from core.graph import Graph, Node
 
 
 class TestDijkstra:
