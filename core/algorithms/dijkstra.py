@@ -6,7 +6,7 @@ from core.graphs.graph import AbstractGraph
 def dijkstra(graph: AbstractGraph, origin: Union[str, int]) -> (Dict, Dict):
     """
     :param origin: name or id of origin node
-    :return: dict of shortest paths weights, dict of paths
+    :return: dict of the shortest paths weights, dict of paths
     """
     if not graph[origin]:
         raise Exception("There no such node")

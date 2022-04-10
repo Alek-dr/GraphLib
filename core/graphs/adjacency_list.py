@@ -21,7 +21,6 @@ class AdjListGraph(AbstractGraph):
             for node in childs:
                 if node.name == key:
                     childs.remove(node)
-        # [childs.remove(node) for childs in self.adj_list.values() for node in childs if node.name == key]
 
     def remove_edge(self, src, dst) -> bool:
         """

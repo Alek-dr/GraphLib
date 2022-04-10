@@ -8,7 +8,7 @@ class GraphType(Enum):
     AdjList = 0
 
 
-def create_graph(graph_type: GraphType, oriented: bool = False) -> AbstractGraph:
+def create_graph(graph_type: GraphType = AdjListGraph, oriented: bool = False) -> AbstractGraph:
     graphs = {
         GraphType.AdjList: AdjListGraph
     }
