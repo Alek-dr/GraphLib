@@ -1,4 +1,4 @@
-from typing import Union, Dict
+from typing import Dict, Union
 
 from core.graphs.graph import AbstractGraph
 

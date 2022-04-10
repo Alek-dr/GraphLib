@@ -8,8 +8,10 @@ class GraphType(Enum):
     AdjList = 0
 
 
-def create_graph(graph_type: GraphType = AdjListGraph, oriented: bool = False) -> AbstractGraph:
-    graphs = {
-        GraphType.AdjList: AdjListGraph
-    }
-    return graphs[graph_type](oriented)
+def create_graph(
+    graph_type: GraphType = GraphType.AdjList,
+    directed: bool = False,
+    weighted: bool = False,
+) -> AbstractGraph:
+    graphs = {GraphType.AdjList: AdjListGraph}
+    return graphs[graph_type](directed, weighted)

@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class AbstractNode(ABC):
-
     def __init__(self, name):
         self._name = name
 
@@ -22,7 +21,6 @@ class AbstractNode(ABC):
 
 
 class Node(AbstractNode):
-
     def __init__(self, name):
         super().__init__(name)
 

@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from collections import namedtuple
-from typing import Union
+from typing import Dict, Union
 
 from .node import AbstractNode
 
@@ -8,10 +8,10 @@ adj = namedtuple("adj", "name weight")
 
 
 class AbstractGraph(metaclass=ABCMeta):
-
-    def __init__(self, oriented):
+    def __init__(self, directed: bool, weighted: bool):
         self.vertexes = set()
-        self.oriented = oriented
+        self.directed = directed
+        self.weighted = weighted
 
     @abstractmethod
     def add_node(self, node) -> bool:
@@ -55,3 +55,17 @@ class AbstractGraph(metaclass=ABCMeta):
     def __delitem__(self, key):
         v = self[key]
         self.vertexes.remove(v)
+
+    @abstractmethod
+    def deg(self) -> Dict:
+        """
+        Returns degrees of vertexes
+        """
+        pass
+
+    @abstractmethod
+    def is_simple(self) -> bool:
+        """
+        Check if graph is simple
+        """
+        pass

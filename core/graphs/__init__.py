@@ -1,2 +1,2 @@
-from .graph_factory import create_graph, GraphType
+from .graph_factory import GraphType, create_graph
 from .node import Node

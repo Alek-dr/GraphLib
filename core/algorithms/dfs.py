@@ -1,11 +1,13 @@
 from collections import deque
-from typing import Union, Dict
+from typing import Dict, Union
 
 from core.algorithms.utils import has_multiple_paths
 from core.graphs.graph import AbstractGraph
 
 
-def dfs(graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None) -> Dict:
+def dfs(
+    graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None
+) -> Dict:
     """
     :param origin: name or id of origin node
     :param target: node to find path. If target is None all paths will be returned

@@ -1,4 +1,4 @@
-from typing import Union, Dict
+from typing import Dict, Union
 
 from core.algorithms.utils import has_multiple_paths
 from core.graphs.graph import AbstractGraph, adj
@@ -10,8 +10,8 @@ class AdjListGraph(AbstractGraph):
     Graph implementation as adjacency list
     """
 
-    def __init__(self, oriented=False):
-        super().__init__(oriented)
+    def __init__(self, directed: bool = False, weighted: bool = False):
+        super().__init__(directed, weighted)
         self.adj_list = {}
 
     def __delitem__(self, key):
@@ -22,19 +22,49 @@ class AdjListGraph(AbstractGraph):
                 if node.name == key:
                     childs.remove(node)
 
+    def deg(self) -> Dict:
+        degrees = {}
+        if not self.directed:
+            degrees = {
+                node_name: len(adj_list)
+                for node_name, adj_list in self.adj_list.items()
+            }
+        else:
+            for node_name in self.adj_list.keys():
+                degrees[node_name] = dict(in_degree=0, out_degree=0)
+            for node_name, adj_list in self.adj_list.items():
+                degrees[node_name]["out_degree"] = len(adj_list)
+                for item in adj_list:
+                    degrees[item.name]["in_degree"] += 1
+        return degrees
+
+    def is_simple(self) -> bool:
+        if self.directed or self.weighted:
+            return False
+        for node_name, adj_list in self.adj_list.items():
+            names = [item.name for item in adj_list]
+            if len(names) != len(set(names)):
+                # multiple edges
+                return False
+            for name in names:
+                if name == node_name:
+                    # loop
+                    return False
+        return True
+
     def remove_edge(self, src, dst) -> bool:
         """
-       :param src: name or id of source node
-       :param dst: name or id of dst node
-       :return: true if edge removed sucessfully, false otherwise
-       """
+        :param src: name or id of source node
+        :param dst: name or id of dst node
+        :return: true if edge removed sucessfully, false otherwise
+        """
         if self[src] and self[dst]:
             childs = self.adj_list[src]
             for node in childs:
                 if node.name == dst:
                     childs.remove(node)
                     break
-            if not self.oriented:
+            if not self.directed:
                 childs = self.adj_list[dst]
                 for node in childs:
                     if node.name == src:
@@ -63,7 +93,7 @@ class AdjListGraph(AbstractGraph):
         """
         if self[src] and self[dst]:
             self.adj_list[src].append(adj(dst, weight))
-            if not self.oriented:
+            if not self.directed:
                 self.adj_list[dst].append(adj(src, weight))
             return True
         return False
@@ -84,12 +114,16 @@ class AdjListGraph(AbstractGraph):
                 # If there are multiple ways to node
                 paths[child.name] = paths[node][0] + [child.name]
                 for i in range(1, len(paths[node])):
-                    paths[child.name] = [paths[child.name], paths[node][i] + [child.name]]
+                    paths[child.name] = [
+                        paths[child.name],
+                        paths[node][i] + [child.name],
+                    ]
             else:
                 paths[child.name] = paths[node] + [child.name]
         else:
-            m_node_paths, m_child_paths = has_multiple_paths(paths[node]), has_multiple_paths(
-                paths[child.name])
+            m_node_paths, m_child_paths = has_multiple_paths(
+                paths[node]
+            ), has_multiple_paths(paths[child.name])
             if not (m_node_paths + m_child_paths):
                 # There are only one way to child and one way to node
                 paths[child.name] = [paths[child.name], paths[node] + [child.name]]
