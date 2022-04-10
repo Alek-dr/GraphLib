@@ -24,11 +24,11 @@ def bfs(
         node = queue.pop()
         for child in graph.get_adj_nodes(node):
             paths = graph._get_paths(child, node, paths)
-            if (target is not None) and (child.name == target):
+            if (target is not None) and (child.dst == target):
                 if has_multiple_paths(paths[target]):
                     return {target: min(paths[target], key=lambda x: len(x))}
                 else:
                     return {target: paths[target]}
-            visited.add(child.name)
-            queue.appendleft(child.name)
+            visited.add(child.dst)
+            queue.appendleft(child.dst)
     return paths

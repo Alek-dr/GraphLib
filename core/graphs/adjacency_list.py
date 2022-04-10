@@ -1,7 +1,7 @@
 from typing import Dict, Union
 
 from core.algorithms.utils import has_multiple_paths
-from core.graphs.graph import AbstractGraph, adj
+from core.graphs.graph import AbstractGraph, edge
 from core.graphs.node import AbstractNode
 
 
@@ -35,14 +35,14 @@ class AdjListGraph(AbstractGraph):
             for node_name, adj_list in self.adj_list.items():
                 degrees[node_name]["out_degree"] = len(adj_list)
                 for item in adj_list:
-                    degrees[item.name]["in_degree"] += 1
+                    degrees[item.dst]["in_degree"] += 1
         return degrees
 
     def is_simple(self) -> bool:
         if self.directed or self.weighted:
             return False
         for node_name, adj_list in self.adj_list.items():
-            names = [item.name for item in adj_list]
+            names = [item.dst for item in adj_list]
             if len(names) != len(set(names)):
                 # multiple edges
                 return False
@@ -92,15 +92,28 @@ class AdjListGraph(AbstractGraph):
         :return: true if edge added sucessfully, false otherwise
         """
         if self[src] and self[dst]:
-            self.adj_list[src].append(adj(dst, weight))
+            self.adj_list[src].append(edge(src, dst, weight))
             if not self.directed:
-                self.adj_list[dst].append(adj(src, weight))
+                self.adj_list[dst].append(edge(dst, src, weight))
             return True
         return False
 
-    def get_adj_nodes(self, node_name: Union[str, id]) -> adj:
+    def get_adj_nodes(self, node_name: Union[str, id]) -> edge:
         for item in self.adj_list[node_name]:
             yield item
+
+    def get_edges(self) -> edge:
+        if self.directed == False:
+            same_edges = set()
+            for vertex_edges in self.adj_list.values():
+                for item in vertex_edges:
+                    if item not in same_edges:
+                        yield item
+                    same_edges.add(edge(item.dst, item.src, item.weight))
+        else:
+            for vertex_edges in self.adj_list.values():
+                for item in vertex_edges:
+                    yield item
 
     def _get_paths(self, child, node, paths) -> Dict:
         """
@@ -109,35 +122,35 @@ class AdjListGraph(AbstractGraph):
         :param paths: dict of paths
         :return: paths
         """
-        if child.name not in paths:
+        if child.dst not in paths:
             if has_multiple_paths(paths[node]):
                 # If there are multiple ways to node
-                paths[child.name] = paths[node][0] + [child.name]
+                paths[child.dst] = paths[node][0] + [child.dst]
                 for i in range(1, len(paths[node])):
-                    paths[child.name] = [
-                        paths[child.name],
-                        paths[node][i] + [child.name],
+                    paths[child.dst] = [
+                        paths[child.dst],
+                        paths[node][i] + [child.dst],
                     ]
             else:
-                paths[child.name] = paths[node] + [child.name]
+                paths[child.dst] = paths[node] + [child.dst]
         else:
             m_node_paths, m_child_paths = has_multiple_paths(
                 paths[node]
-            ), has_multiple_paths(paths[child.name])
+            ), has_multiple_paths(paths[child.dst])
             if not (m_node_paths + m_child_paths):
                 # There are only one way to child and one way to node
-                paths[child.name] = [paths[child.name], paths[node] + [child.name]]
+                paths[child.dst] = [paths[child.dst], paths[node] + [child.dst]]
             elif m_node_paths and (not m_child_paths):
                 # Multiple ways to node and only one to child
-                for i in range(len(paths[child.name])):
-                    paths[child.name][i] = paths[child.name][i] + paths[node]
+                for i in range(len(paths[child.dst])):
+                    paths[child.dst][i] = paths[child.dst][i] + paths[node]
             elif m_child_paths and (not m_node_paths):
                 # Multiple ways to child and only one to node
-                paths[child.name].append(paths[node] + [child.name])
+                paths[child.dst].append(paths[node] + [child.dst])
             else:
                 # Multiple ways for child and node
                 for i in range(len(paths[node])):
-                    path = paths[node][i] + [child.name]
-                    if path not in paths[child.name]:
-                        paths[child.name].append(path)
+                    path = paths[node][i] + [child.dst]
+                    if path not in paths[child.dst]:
+                        paths[child.dst].append(path)
         return paths

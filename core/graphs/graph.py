@@ -4,7 +4,7 @@ from typing import Dict, Union
 
 from .node import AbstractNode
 
-adj = namedtuple("adj", "name weight")
+edge = namedtuple("edge", "src,dst,weight")
 
 
 class AbstractGraph(metaclass=ABCMeta):
@@ -43,7 +43,11 @@ class AbstractGraph(metaclass=ABCMeta):
         return True
 
     @abstractmethod
-    def get_adj_nodes(self, node_name: Union[str, id]) -> adj:
+    def get_adj_nodes(self, node_name: Union[str, id]) -> edge:
+        pass
+
+    @abstractmethod
+    def get_edges(self) -> edge:
         pass
 
     def __getitem__(self, item: Union[str, int]):

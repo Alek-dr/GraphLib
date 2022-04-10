@@ -17,11 +17,11 @@ def dijkstra(graph: AbstractGraph, origin: Union[str, int]) -> (Dict, Dict):
     current_node = origin
     while unvisited:
         for node in graph.get_adj_nodes(current_node):
-            if node.name in unvisited:
+            if node.dst in unvisited:
                 d = node.weight + costs[current_node]
-                if costs[node.name] > d:
-                    costs[node.name] = d
-                    paths[node.name] = paths[current_node] + [node.name]
+                if costs[node.dst] > d:
+                    costs[node.dst] = d
+                    paths[node.dst] = paths[current_node] + [node.dst]
         nearest = unvisited[0]
         min_w = costs[nearest]
         for node in unvisited:

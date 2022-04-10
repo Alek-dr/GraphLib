@@ -24,7 +24,7 @@ def dfs(
         if node not in visited:
             visited.add(node)
             for child in graph.get_adj_nodes(node):
-                queue.append(child.name)
+                queue.append(child.dst)
                 paths = graph._get_paths(child, node, paths)
     if target is not None:
         if has_multiple_paths(paths[target]):
