@@ -3,8 +3,9 @@ from collections import namedtuple
 from typing import Dict, Union
 
 from .node import AbstractNode
+from ..algorithms.utils import edge_name_generator
 
-edge = namedtuple("edge", "src,dst,weight")
+edge = namedtuple("edge", "src,dst,weight,name")
 
 
 class AbstractGraph(metaclass=ABCMeta):
@@ -12,13 +13,14 @@ class AbstractGraph(metaclass=ABCMeta):
         self.vertexes = set()
         self.directed = directed
         self.weighted = weighted
+        self.edge_name_gen = edge_name_generator()
 
     @abstractmethod
-    def add_node(self, node) -> bool:
+    def add_node(self, node) -> None:
         pass
 
     @abstractmethod
-    def add_edge(self, src, dst, weight=1) -> bool:
+    def add_edge(self, src, dst, weight: int = 1, name: str = None) -> None:
         pass
 
     @abstractmethod
@@ -32,7 +34,11 @@ class AbstractGraph(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def remove_edge(self, src, dst) -> bool:
+    def remove_edge_by_name(self, name: str) -> None:
+        pass
+
+    @abstractmethod
+    def remove_edge_by_vertexes(self, src, dst, name: str = None) -> None:
         pass
 
     def check_node(self, node: AbstractNode) -> bool:

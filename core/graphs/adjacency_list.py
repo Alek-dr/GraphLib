@@ -1,6 +1,7 @@
 from typing import Dict, Union
 
 from core.algorithms.utils import has_multiple_paths
+from core.exceptions import EdgeAddError, EdgeRemoveError
 from core.graphs.graph import AbstractGraph, edge
 from core.graphs.node import AbstractNode
 
@@ -52,28 +53,50 @@ class AdjListGraph(AbstractGraph):
                     return False
         return True
 
-    def remove_edge(self, src, dst) -> bool:
+    def remove_edge_by_name(self, name: str) -> None:
+        found = False
+        for vertex_edges in self.adj_list.values():
+            if found:
+                break
+            for edge_ in vertex_edges:
+                if edge_.name == name:
+                    self.adj_list[edge_.src].remove(edge_)
+                    if not self.directed:
+                        self.adj_list[edge_.dst].remove(edge(edge_.dst, edge_.src, edge_.weight, edge_.name))
+                    found = True
+                    break
+        if not found:
+            raise EdgeRemoveError(f"Cannot find edge with name: {name}")
+        return
+
+    def remove_edge_by_vertexes(self, src, dst, name: str = None) -> None:
         """
+        :param name: edge name
         :param src: name or id of source node
         :param dst: name or id of dst node
-        :return: true if edge removed sucessfully, false otherwise
         """
         if self[src] and self[dst]:
             childs = self.adj_list[src]
-            for node in childs:
-                if node.name == dst:
-                    childs.remove(node)
-                    break
-            if not self.directed:
-                childs = self.adj_list[dst]
-                for node in childs:
-                    if node.name == src:
-                        childs.remove(node)
+            if name is not None:
+                for edge_ in childs:
+                    if edge_.name == name:
+                        self.adj_list[src].remove(edge_)
+                        if not self.directed:
+                            self.adj_list[dst].remove(edge(dst, src, edge_.weight, name))
                         break
-            return True
-        return False
+            else:
+                candidates = [node for node in childs if node.dst == dst]
+                if len(candidates) > 1:
+                    raise EdgeRemoveError(f"Found more then 1 edge: {candidates}")
+                elif len(candidates) == 0:
+                    raise EdgeRemoveError(f"Cannot find edge with src = {src}, dst = {dst}")
+                else:
+                    edge_ = candidates[0]
+                    self.adj_list[src].remove(edge_)
+                    if not self.directed:
+                        self.adj_list[dst].remove(edge(dst, src, edge_.weight, edge_.name))
 
-    def add_node(self, node: AbstractNode) -> bool:
+    def add_node(self, node: AbstractNode) -> None:
         """
         :param node: AbstractNode implementation
         :return: true if node added sucessfully, false otherwise
@@ -81,35 +104,38 @@ class AdjListGraph(AbstractGraph):
         if self.check_node(node):
             self.vertexes.add(node)
             self.adj_list[node.name] = []
-            return True
-        return False
+        return
 
-    def add_edge(self, src, dst, weight=1) -> bool:
+    def add_edge(self, src, dst, weight: int = 1, name: str = None) -> None:
         """
+        :param name: edge name
         :param src: name or id of source node
         :param dst: name or id of dst node
         :param weight: weight of edge
-        :return: true if edge added sucessfully, false otherwise
         """
         if self[src] and self[dst]:
-            self.adj_list[src].append(edge(src, dst, weight))
-            if not self.directed:
-                self.adj_list[dst].append(edge(dst, src, weight))
-            return True
-        return False
+            if not self._edge_exists(src, dst, weight, name):
+                if name is None:
+                    name = next(self.edge_name_gen)
+                self.adj_list[src].append(edge(src, dst, weight, name))
+                if not self.directed:
+                    self.adj_list[dst].append(edge(dst, src, weight, name))
+            else:
+                raise EdgeAddError(f"{edge(src, dst, weight, name)} already exists")
+        return
 
     def get_adj_nodes(self, node_name: Union[str, id]) -> edge:
         for item in self.adj_list[node_name]:
             yield item
 
     def get_edges(self) -> edge:
-        if self.directed == False:
+        if not self.directed:
             same_edges = set()
             for vertex_edges in self.adj_list.values():
-                for item in vertex_edges:
-                    if item not in same_edges:
-                        yield item
-                    same_edges.add(edge(item.dst, item.src, item.weight))
+                for edge_ in vertex_edges:
+                    if edge_.name not in same_edges:
+                        yield edge_
+                    same_edges.add(edge_.name)
         else:
             for vertex_edges in self.adj_list.values():
                 for item in vertex_edges:
@@ -154,3 +180,9 @@ class AdjListGraph(AbstractGraph):
                     if path not in paths[child.dst]:
                         paths[child.dst].append(path)
         return paths
+
+    def _edge_exists(self, src, dst, weight: int, name: str = None) -> bool:
+        for edge in self.adj_list[src]:
+            if (edge.src == src) and (edge.dst == dst) and (edge.weight == weight) and (edge.name == name):
+                return True
+        return False

@@ -31,3 +31,6 @@ class Node(AbstractNode):
     @name.setter
     def name(self, val):
         self._name = val
+
+    def __str__(self):
+        return str(self._name)

@@ -1,6 +1,7 @@
 import pytest
 
 from core.graphs import Node, create_graph
+from core.graphs.graph import AbstractGraph
 
 
 def graph_1(graph):
@@ -41,7 +42,7 @@ def graph_1(graph):
     return graph
 
 
-def graph_2(graph):
+def graph_2(graph) -> AbstractGraph:
     """
     Грокаем алгоритмы. стр.137, 6.1
     """
@@ -59,13 +60,13 @@ def graph_2(graph):
     graph.add_node(nodeF)
     graph.add_node(nodeC)
 
-    graph.add_edge("S", "D")
+    graph.add_edge("S", "D", name="SD_Edge")
     graph.add_edge("S", "B")
     graph.add_edge("D", "E")
     graph.add_edge("B", "E")
     graph.add_edge("B", "C")
     graph.add_edge("D", "F")
-    graph.add_edge("C", "F")
+    graph.add_edge("C", "F", name="CF_Edge")
     return graph
 
 
