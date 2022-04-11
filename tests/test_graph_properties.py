@@ -19,15 +19,27 @@ def check_degree_sum(graph):
 
 
 @pytest.mark.parametrize(
-    "graph_type",
+    "graph_type, directed, weighted",
     [
-        GraphType.AdjList,
-    ],
+        [
+            GraphType.AdjList, True, True
+        ],
+        [
+            GraphType.AdjList, True, False
+        ],
+        [
+            GraphType.AdjList, False, True
+        ],
+        [
+            GraphType.AdjList, False, False
+        ]
+    ]
 )
-def test_graph_1(graph_type):
-    graph = create_graph(graph_type, directed=False, weighted=False)
+def test_graph_1(graph_type: GraphType, directed, weighted):
+    graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = graph_1(graph)
-    assert graph.is_simple() == True
+    simple = not (directed or weighted)
+    assert graph.is_simple() == simple
     check_degree_sum(graph)
 
 

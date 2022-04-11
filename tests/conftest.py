@@ -47,30 +47,30 @@ def graph_2(graph) -> AbstractGraph:
     Грокаем алгоритмы. стр.137, 6.1
     """
     nodeS = Node("S")
-    nodeD = Node("D")
     nodeB = Node("B")
+    nodeD = Node("D")
     nodeE = Node("E")
     nodeC = Node("C")
     nodeF = Node("F")
 
     graph.add_node(nodeS)
-    graph.add_node(nodeD)
     graph.add_node(nodeB)
+    graph.add_node(nodeD)
     graph.add_node(nodeE)
-    graph.add_node(nodeF)
     graph.add_node(nodeC)
+    graph.add_node(nodeF)
 
-    graph.add_edge("S", "D", name="SD_Edge")
     graph.add_edge("S", "B")
-    graph.add_edge("D", "E")
+    graph.add_edge("S", "D")
     graph.add_edge("B", "E")
+    graph.add_edge("D", "E")
     graph.add_edge("B", "C")
     graph.add_edge("D", "F")
-    graph.add_edge("C", "F", name="CF_Edge")
+    graph.add_edge("C", "F")
     return graph
 
 
-def graph_3_1(graph):
+def graph_3_1(graph) -> AbstractGraph:
     """
     Граф из "Грокаем алгоритмы. Алгоритм Дейкстры" стр.181"
     """
@@ -82,14 +82,14 @@ def graph_3_1(graph):
     nodeF = Node("F")
 
     graph.add_node(nodeA)
-    graph.add_node(nodeB)
     graph.add_node(nodeC)
-    graph.add_node(nodeD)
+    graph.add_node(nodeB)
     graph.add_node(nodeE)
+    graph.add_node(nodeD)
     graph.add_node(nodeF)
 
-    graph.add_edge("A", "B", 5)
     graph.add_edge("A", "C", 2)
+    graph.add_edge("A", "B", 5)
     graph.add_edge("B", "D", 4)
     graph.add_edge("B", "E", 2)
     graph.add_edge("C", "B", 8)

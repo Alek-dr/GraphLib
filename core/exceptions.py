@@ -8,3 +8,11 @@ class EdgeAddError(EdgeOperationError):
 
 class EdgeRemoveError(EdgeOperationError):
     pass
+
+
+class VertexException(Exception):
+    pass
+
+
+class VertexNotFound(VertexException):
+    pass

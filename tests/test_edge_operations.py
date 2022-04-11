@@ -62,12 +62,12 @@ def test_remove_by_src_dst(graph_type: GraphType, directed, weighted):
 def test_remove_by_name(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = graph_2(graph)
-    graph.remove_edge_by_name("SD_Edge")
+    graph.remove_edge_by_name("b")
     check_edge_not_exists(graph, "S", "D")
 
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = graph_2(graph)
-    graph.remove_edge_by_name("CF_Edge")
+    graph.remove_edge_by_name("g")
     check_edge_not_exists(graph, "C", "F")
 
 
@@ -116,7 +116,7 @@ def test_add_edge_error(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = graph_2(graph)
     with pytest.raises(EdgeAddError):
-        graph.add_edge("S", "D", name="SD_Edge")
+        graph.add_edge("S", "D", name="b")
 
 
 @pytest.mark.parametrize(
