@@ -23,15 +23,15 @@ class AbstractGraph(metaclass=ABCMeta):
     def add_edge(self, src, dst, weight: int = 1, name: str = None) -> None:
         pass
 
-    @abstractmethod
-    def _get_paths(self, child, node, paths):
-        """
-        :param child: child node name
-        :param node: current node name
-        :param paths: dict of paths
-        :return: paths
-        """
-        pass
+    # @abstractmethod
+    # def _get_paths(self, child, node, paths):
+    #     """
+    #     :param child: child node name
+    #     :param node: current node name
+    #     :param paths: dict of paths
+    #     :return: paths
+    #     """
+    #     pass
 
     @abstractmethod
     def remove_edge_by_name(self, name: str) -> None:
@@ -49,7 +49,7 @@ class AbstractGraph(metaclass=ABCMeta):
         return True
 
     @abstractmethod
-    def get_adj_nodes(self, node_name: Union[str, id]) -> edge:
+    def get_adj_edges(self, node_name: Union[str, id]) -> edge:
         pass
 
     @abstractmethod

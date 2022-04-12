@@ -16,7 +16,7 @@ def dijkstra(graph: AbstractGraph, origin: Union[str, int]) -> (Dict, Dict):
     paths = {origin: [origin]}
     current_node = origin
     while unvisited:
-        for node in graph.get_adj_nodes(current_node):
+        for node in graph.get_adj_edges(current_node):
             if node.dst in unvisited:
                 d = node.weight + costs[current_node]
                 if costs[node.dst] > d:

@@ -31,7 +31,7 @@ def dfs(
             if paths.get(curr_edge.src):
                 path = paths.get(curr_edge.src) + path
             paths[curr_edge.dst] = path
-            edges = [edge_ for edge_ in graph.get_adj_nodes(curr_edge.dst)]
+            edges = [edge_ for edge_ in graph.get_adj_edges(curr_edge.dst)]
             for edge_ in reversed(edges):
                 if edge_.dst not in visited:
                     stack.append(edge_)

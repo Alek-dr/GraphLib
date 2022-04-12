@@ -8,19 +8,11 @@ from tests.conftest import graph_1, graph_2, graph_3_1
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_bfs_1(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -36,19 +28,11 @@ def test_bfs_1(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_bfs_2(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -67,19 +51,11 @@ def test_bfs_2(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_bfs_3(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)

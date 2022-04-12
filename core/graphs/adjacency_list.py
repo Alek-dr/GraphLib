@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 from core.algorithms.utils import has_multiple_paths
 from core.exceptions import EdgeAddError, EdgeRemoveError
@@ -123,17 +123,23 @@ class AdjListGraph(AbstractGraph):
         :param weight: weight of edge
         """
         if self[src] and self[dst]:
-            if not self._edge_exists(src, dst, weight, name):
-                if name is None:
+            if name is None:
+                while name is None:
                     name = next(self.edge_name_gen)
-                self.adj_list[src].append(edge(src, dst, weight, name))
-                if not self.directed:
-                    self.adj_list[dst].append(edge(dst, src, weight, name))
+                    if self._edge_exists(name) is not None:
+                        name = None
             else:
-                raise EdgeAddError(f"{edge(src, dst, weight, name)} already exists")
+                e = self._edge_exists(name)
+                if e is not None:
+                    raise EdgeAddError(f"Edge with name '{name}' already exists: {e}")
+            self.adj_list[src].append(edge(src, dst, weight, name))
+            if not self.directed:
+                self.adj_list[dst].append(edge(dst, src, weight, name))
+        else:
+            raise EdgeAddError(f"Src or dst vertex does not exists")
         return
 
-    def get_adj_nodes(self, node_name: Union[str, id]) -> edge:
+    def get_adj_edges(self, node_name: Union[str, id]) -> edge:
         for item in self.adj_list[node_name]:
             yield item
 
@@ -190,57 +196,54 @@ class AdjListGraph(AbstractGraph):
     #                 if path not in paths[child.dst]:
     #                     paths[child.dst].append(path)
     #     return paths
+    #
+    # def _get_paths(self, child, node, paths) -> Dict:
+    #     """
+    #     :param child: child node name
+    #     :param node: current node name
+    #     :param paths: dict of paths
+    #     :return: paths
+    #     """
+    #     if child.dst not in paths:
+    #         if has_multiple_paths(paths[node]):
+    #             # If there are multiple ways to node
+    #             paths[child.dst] = paths[node][0] + [child.dst]
+    #             for i in range(1, len(paths[node])):
+    #                 paths[child.dst] = [
+    #                     paths[child.dst],
+    #                     paths[node][i] + [child.dst],
+    #                 ]
+    #         else:
+    #             p = Path(child.dst)
+    #             p.add_step(child.src, child.name, child.weight)
+    #             a = paths[node][0]
+    #             paths[child.dst] = [a + p]
+    #     else:
+    #         m_node_paths, m_child_paths = has_multiple_paths(
+    #             paths[node]
+    #         ), has_multiple_paths(paths[child.dst])
+    #         if not (m_node_paths + m_child_paths):
+    #             # There are only one way to child and one way to node
+    #             paths[child.dst] = [paths[child.dst], paths[node] + [child.dst]]
+    #         elif m_node_paths and (not m_child_paths):
+    #             # Multiple ways to node and only one to child
+    #             for i in range(len(paths[child.dst])):
+    #                 paths[child.dst][i] = paths[child.dst][i] + paths[node]
+    #         elif m_child_paths and (not m_node_paths):
+    #             # Multiple ways to child and only one to node
+    #             paths[child.dst].append(paths[node] + [child.dst])
+    #         else:
+    #             # Multiple ways for child and node
+    #             for i in range(len(paths[node])):
+    #                 path = paths[node][i] + [child.dst]
+    #                 if path not in paths[child.dst]:
+    #                     paths[child.dst].append(path)
+    #     return paths
 
-    def _get_paths(self, child, node, paths) -> Dict:
-        """
-        :param child: child node name
-        :param node: current node name
-        :param paths: dict of paths
-        :return: paths
-        """
-        if child.dst not in paths:
-            if has_multiple_paths(paths[node]):
-                # If there are multiple ways to node
-                paths[child.dst] = paths[node][0] + [child.dst]
-                for i in range(1, len(paths[node])):
-                    paths[child.dst] = [
-                        paths[child.dst],
-                        paths[node][i] + [child.dst],
-                    ]
-            else:
-                p = Path(child.dst)
-                p.add_step(child.src, child.name, child.weight)
-                a = paths[node][0]
-                paths[child.dst] = [a + p]
-        else:
-            m_node_paths, m_child_paths = has_multiple_paths(
-                paths[node]
-            ), has_multiple_paths(paths[child.dst])
-            if not (m_node_paths + m_child_paths):
-                # There are only one way to child and one way to node
-                paths[child.dst] = [paths[child.dst], paths[node] + [child.dst]]
-            elif m_node_paths and (not m_child_paths):
-                # Multiple ways to node and only one to child
-                for i in range(len(paths[child.dst])):
-                    paths[child.dst][i] = paths[child.dst][i] + paths[node]
-            elif m_child_paths and (not m_node_paths):
-                # Multiple ways to child and only one to node
-                paths[child.dst].append(paths[node] + [child.dst])
-            else:
-                # Multiple ways for child and node
-                for i in range(len(paths[node])):
-                    path = paths[node][i] + [child.dst]
-                    if path not in paths[child.dst]:
-                        paths[child.dst].append(path)
-        return paths
-
-    def _edge_exists(self, src, dst, weight: int, name: str = None) -> bool:
-        for edge in self.adj_list[src]:
-            if (
-                (edge.src == src)
-                and (edge.dst == dst)
-                and (edge.weight == weight)
-                and (edge.name == name)
-            ):
-                return True
-        return False
+    def _edge_exists(self, name: str = None) -> Optional[edge]:
+        if name is not None:
+            for edges in self.adj_list.values():
+                for edge_ in edges:
+                    if edge_.name == name:
+                        return edge_
+        return None

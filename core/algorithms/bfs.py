@@ -1,14 +1,13 @@
-from collections import deque
-from typing import Dict, Union, List
+from collections import OrderedDict, deque
+from typing import Dict, Union
 
-from core.algorithms.utils import has_multiple_paths
 from core.exceptions import VertexNotFound
-from core.graphs.graph import AbstractGraph
+from core.graphs.graph import AbstractGraph, edge
 from core.graphs.path import Path
 
 
 def bfs(
-        graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None
+    graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None
 ) -> Dict[Union[int, str], Path]:
     """
     :param origin: name or id of origin node
@@ -18,23 +17,26 @@ def bfs(
     if (target is not None) and (not graph[target]):
         raise VertexNotFound(f"Cannot find vertex {target}")
     p = Path(origin)
-    p.add_step(origin, None, 0)
     if origin == target:
         return {origin: p}
     visited = set()
     visited.add(origin)
     queue = deque()
-    queue.append(origin)
-    paths = {origin: p}
+    e = edge(origin, origin, 0, None)
+    queue.append(e)
+    paths = OrderedDict()
+    path = Path(origin)
+    path.add_step(e)
+    paths[origin] = path
     while queue:
-        node = queue.pop()
-        for edge_ in graph.get_adj_nodes(node):
+        curr_edge = queue.pop()
+        for edge_ in graph.get_adj_edges(curr_edge.dst):
             if edge_.dst not in visited:
-                p = Path(edge_.dst)
-                p.add_step(edge_.src, edge_.name, edge_.weight)
-                paths[edge_.dst] = paths[node] + p
-                if (target is not None) and (edge_.dst == target):
+                path = Path(edge_.dst)
+                path.add_step(edge_)
+                paths[edge_.dst] = paths[edge_.src] + path
+                if (target is not None) and (paths.get(target)):
                     return {target: paths[target]}
+                queue.appendleft(edge_)
                 visited.add(edge_.dst)
-                queue.appendleft(edge_.dst)
     return paths
