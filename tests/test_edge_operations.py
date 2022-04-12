@@ -6,7 +6,9 @@ from tests.conftest import graph_2
 
 
 def check_edge_not_exists(graph, src, dst):
-    assert all([not ((edge.src == src) and (edge.dst == dst)) for edge in graph.get_edges()])
+    assert all(
+        [not ((edge.src == src) and (edge.dst == dst)) for edge in graph.get_edges()]
+    )
 
 
 def check_edge_exists(graph, name):
@@ -21,19 +23,11 @@ def check_edge_exists(graph, name):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_remove_by_src_dst(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -45,19 +39,11 @@ def test_remove_by_src_dst(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_remove_by_name(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -74,19 +60,11 @@ def test_remove_by_name(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_add_edge(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -98,19 +76,11 @@ def test_add_edge(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_add_edge_error(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -122,19 +92,11 @@ def test_add_edge_error(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_remove_edge_error_1(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
@@ -146,19 +108,11 @@ def test_remove_edge_error_1(graph_type: GraphType, directed, weighted):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_remove_edge_error_2(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)

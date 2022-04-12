@@ -2,8 +2,8 @@ from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 from typing import Dict, Union
 
-from .node import AbstractNode
 from ..algorithms.utils import edge_name_generator
+from .node import AbstractNode
 
 edge = namedtuple("edge", "src,dst,weight,name")
 

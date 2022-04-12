@@ -12,7 +12,7 @@ def check_degree_sum(graph):
     deg_sum = 0
     if graph.directed:
         for d in degrees.values():
-            deg_sum += d['in_degree'] + d['out_degree']
+            deg_sum += d["in_degree"] + d["out_degree"]
     else:
         deg_sum = sum(degrees.values())
     assert deg_sum == 2 * E
@@ -21,19 +21,11 @@ def check_degree_sum(graph):
 @pytest.mark.parametrize(
     "graph_type, directed, weighted",
     [
-        [
-            GraphType.AdjList, True, True
-        ],
-        [
-            GraphType.AdjList, True, False
-        ],
-        [
-            GraphType.AdjList, False, True
-        ],
-        [
-            GraphType.AdjList, False, False
-        ]
-    ]
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
+    ],
 )
 def test_graph_1(graph_type: GraphType, directed, weighted):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)

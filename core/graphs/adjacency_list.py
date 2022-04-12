@@ -63,7 +63,9 @@ class AdjListGraph(AbstractGraph):
                 if edge_.name == name:
                     self.adj_list[edge_.src].remove(edge_)
                     if not self.directed:
-                        self.adj_list[edge_.dst].remove(edge(edge_.dst, edge_.src, edge_.weight, edge_.name))
+                        self.adj_list[edge_.dst].remove(
+                            edge(edge_.dst, edge_.src, edge_.weight, edge_.name)
+                        )
                     found = True
                     break
         if not found:
@@ -83,19 +85,25 @@ class AdjListGraph(AbstractGraph):
                     if edge_.name == name:
                         self.adj_list[src].remove(edge_)
                         if not self.directed:
-                            self.adj_list[dst].remove(edge(dst, src, edge_.weight, name))
+                            self.adj_list[dst].remove(
+                                edge(dst, src, edge_.weight, name)
+                            )
                         break
             else:
                 candidates = [node for node in childs if node.dst == dst]
                 if len(candidates) > 1:
                     raise EdgeRemoveError(f"Found more then 1 edge: {candidates}")
                 elif len(candidates) == 0:
-                    raise EdgeRemoveError(f"Cannot find edge with src = {src}, dst = {dst}")
+                    raise EdgeRemoveError(
+                        f"Cannot find edge with src = {src}, dst = {dst}"
+                    )
                 else:
                     edge_ = candidates[0]
                     self.adj_list[src].remove(edge_)
                     if not self.directed:
-                        self.adj_list[dst].remove(edge(dst, src, edge_.weight, edge_.name))
+                        self.adj_list[dst].remove(
+                            edge(dst, src, edge_.weight, edge_.name)
+                        )
 
     def add_node(self, node: AbstractNode) -> None:
         """
@@ -228,6 +236,11 @@ class AdjListGraph(AbstractGraph):
 
     def _edge_exists(self, src, dst, weight: int, name: str = None) -> bool:
         for edge in self.adj_list[src]:
-            if (edge.src == src) and (edge.dst == dst) and (edge.weight == weight) and (edge.name == name):
+            if (
+                (edge.src == src)
+                and (edge.dst == dst)
+                and (edge.weight == weight)
+                and (edge.name == name)
+            ):
                 return True
         return False

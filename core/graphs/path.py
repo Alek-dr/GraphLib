@@ -1,5 +1,7 @@
-class Path:
+from core.graphs.graph import edge
 
+
+class Path:
     def __init__(self, dst_vertex):
         self.dst_vertex = dst_vertex
         self.vertexes = []
@@ -23,9 +25,10 @@ class Path:
                 s += f"{v} -> ({edge}) -> "
         return s
 
-    def add_step(self, v, edge, w) -> None:
-        self.vertexes.append(v)
-        if edge is not None:
-            self.edges.append(edge)
-        self.path_weight += w
+    def add_step(self, edg: edge):
+        if edg is not None:
+            self.vertexes.append(edg.dst)
+            self.path_weight += edg.weight
+            if edg.name is not None:
+                self.edges.append(edg.name)
         return
