@@ -1,10 +1,8 @@
 from typing import Dict, Optional, Union
 
-from core.algorithms.utils import has_multiple_paths
 from core.exceptions import EdgeAddError, EdgeRemoveError
 from core.graphs.graph import AbstractGraph, edge
 from core.graphs.node import AbstractNode
-from core.graphs.path import Path
 
 
 class AdjListGraph(AbstractGraph):
@@ -155,90 +153,6 @@ class AdjListGraph(AbstractGraph):
             for vertex_edges in self.adj_list.values():
                 for item in vertex_edges:
                     yield item
-
-    # def _get_paths(self, child, node, paths) -> Dict:
-    #     """
-    #     :param child: child node name
-    #     :param node: current node name
-    #     :param paths: dict of paths
-    #     :return: paths
-    #     """
-    #     if child.dst not in paths:
-    #         if has_multiple_paths(paths[node]):
-    #             # If there are multiple ways to node
-    #             paths[child.dst] = paths[node][0] + [child.dst]
-    #             for i in range(1, len(paths[node])):
-    #                 paths[child.dst] = [
-    #                     paths[child.dst],
-    #                     paths[node][i] + [child.dst],
-    #                 ]
-    #         else:
-    #             # paths[child.dst] = paths[node] + [child.dst]
-    #             paths[child.dst] = paths[node] + [child.dst]
-    #     else:
-    #         m_node_paths, m_child_paths = has_multiple_paths(
-    #             paths[node]
-    #         ), has_multiple_paths(paths[child.dst])
-    #         if not (m_node_paths + m_child_paths):
-    #             # There are only one way to child and one way to node
-    #             paths[child.dst] = [paths[child.dst], paths[node] + [child.dst]]
-    #         elif m_node_paths and (not m_child_paths):
-    #             # Multiple ways to node and only one to child
-    #             for i in range(len(paths[child.dst])):
-    #                 paths[child.dst][i] = paths[child.dst][i] + paths[node]
-    #         elif m_child_paths and (not m_node_paths):
-    #             # Multiple ways to child and only one to node
-    #             paths[child.dst].append(paths[node] + [child.dst])
-    #         else:
-    #             # Multiple ways for child and node
-    #             for i in range(len(paths[node])):
-    #                 path = paths[node][i] + [child.dst]
-    #                 if path not in paths[child.dst]:
-    #                     paths[child.dst].append(path)
-    #     return paths
-    #
-    # def _get_paths(self, child, node, paths) -> Dict:
-    #     """
-    #     :param child: child node name
-    #     :param node: current node name
-    #     :param paths: dict of paths
-    #     :return: paths
-    #     """
-    #     if child.dst not in paths:
-    #         if has_multiple_paths(paths[node]):
-    #             # If there are multiple ways to node
-    #             paths[child.dst] = paths[node][0] + [child.dst]
-    #             for i in range(1, len(paths[node])):
-    #                 paths[child.dst] = [
-    #                     paths[child.dst],
-    #                     paths[node][i] + [child.dst],
-    #                 ]
-    #         else:
-    #             p = Path(child.dst)
-    #             p.add_step(child.src, child.name, child.weight)
-    #             a = paths[node][0]
-    #             paths[child.dst] = [a + p]
-    #     else:
-    #         m_node_paths, m_child_paths = has_multiple_paths(
-    #             paths[node]
-    #         ), has_multiple_paths(paths[child.dst])
-    #         if not (m_node_paths + m_child_paths):
-    #             # There are only one way to child and one way to node
-    #             paths[child.dst] = [paths[child.dst], paths[node] + [child.dst]]
-    #         elif m_node_paths and (not m_child_paths):
-    #             # Multiple ways to node and only one to child
-    #             for i in range(len(paths[child.dst])):
-    #                 paths[child.dst][i] = paths[child.dst][i] + paths[node]
-    #         elif m_child_paths and (not m_node_paths):
-    #             # Multiple ways to child and only one to node
-    #             paths[child.dst].append(paths[node] + [child.dst])
-    #         else:
-    #             # Multiple ways for child and node
-    #             for i in range(len(paths[node])):
-    #                 path = paths[node][i] + [child.dst]
-    #                 if path not in paths[child.dst]:
-    #                     paths[child.dst].append(path)
-    #     return paths
 
     def _edge_exists(self, name: str = None) -> Optional[edge]:
         if name is not None:

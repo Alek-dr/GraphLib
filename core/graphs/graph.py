@@ -2,7 +2,8 @@ from abc import ABCMeta, abstractmethod
 from collections import namedtuple
 from typing import Dict, Union
 
-from ..algorithms.utils import edge_name_generator
+from core.graphs.utils import edge_name_generator
+
 from .node import AbstractNode
 
 edge = namedtuple("edge", "src,dst,weight,name")
@@ -22,16 +23,6 @@ class AbstractGraph(metaclass=ABCMeta):
     @abstractmethod
     def add_edge(self, src, dst, weight: int = 1, name: str = None) -> None:
         pass
-
-    # @abstractmethod
-    # def _get_paths(self, child, node, paths):
-    #     """
-    #     :param child: child node name
-    #     :param node: current node name
-    #     :param paths: dict of paths
-    #     :return: paths
-    #     """
-    #     pass
 
     @abstractmethod
     def remove_edge_by_name(self, name: str) -> None:
