@@ -2,8 +2,15 @@ import pytest
 
 from core.algorithms import dijkstra
 from core.graphs import GraphType, create_graph
-from tests.conftest import (graph_3_1, graph_3_2, graph_4_1, graph_4_2,
-                            graph_5, graph_6, graph_7)
+from tests.conftest import (
+    graph_3_1,
+    graph_3_2,
+    graph_4_1,
+    graph_4_2,
+    graph_5,
+    graph_6,
+    graph_7,
+)
 
 
 @pytest.mark.parametrize(
@@ -15,80 +22,89 @@ from tests.conftest import (graph_3_1, graph_3_2, graph_4_1, graph_4_2,
 def test_dijkstra_3_1(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
     graph = graph_3_1(graph)
-    w, p = dijkstra(graph, "A")
-    assert w == {"A": 0, "B": 5, "C": 2, "D": 9, "E": 7, "F": 8}
-    assert p["A"] == ["A"]
-    assert p["B"] == ["A", "B"]
-    assert p["C"] == ["A", "C"]
-    assert p["D"] == ["A", "B", "D"]
-    assert p["E"] == ["A", "B", "E"]
-    assert p["F"] == ["A", "B", "E", "F"]
+    paths = dijkstra(graph, "A")
+    assert paths["A"].vertexes == ["A"]
+    assert paths["A"].path_weight == 0
+    assert paths["B"].vertexes == ["A", "B"]
+    assert paths["B"].path_weight == 5
+    assert paths["C"].vertexes == ["A", "C"]
+    assert paths["C"].path_weight == 2
+    assert paths["D"].vertexes == ["A", "B", "D"]
+    assert paths["D"].path_weight == 9
+    assert paths["E"].vertexes == ["A", "B", "E"]
+    assert paths["E"].path_weight == 7
+    assert paths["F"].vertexes == ["A", "B", "E", "F"]
+    assert paths["F"].path_weight == 8
 
-    w, p = dijkstra(graph, "B")
-    assert w == {"A": float("inf"), "B": 0, "C": float("inf"), "D": 4, "E": 2, "F": 3}
-    assert p.get("A") is None
-    assert p["B"] == ["B"]
-    assert p.get("C") is None
-    assert p["D"] == ["B", "D"]
-    assert p["E"] == ["B", "E"]
-    assert p["F"] == ["B", "E", "F"]
+    paths = dijkstra(graph, "B")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["B"]
+    assert paths["B"].path_weight == 0
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert paths["D"].vertexes == ["B", "D"]
+    assert paths["D"].path_weight == 4
+    assert paths["E"].vertexes == ["B", "E"]
+    assert paths["E"].path_weight == 2
+    assert paths["F"].vertexes == ["B", "E", "F"]
+    assert paths["F"].path_weight == 3
 
-    w, p = dijkstra(graph, "C")
-    assert w == {"A": float("inf"), "B": 8, "C": 0, "D": 12, "E": 7, "F": 8}
-    assert p.get("A") is None
-    assert p["B"] == ["C", "B"]
-    assert p["C"] == ["C"]
-    assert p["D"] == ["C", "B", "D"]
-    assert p["E"] == ["C", "E"]
-    assert p["F"] == ["C", "E", "F"]
+    paths = dijkstra(graph, "C")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["C", "B"]
+    assert paths["B"].path_weight == 8
+    assert paths["C"].vertexes == ["C"]
+    assert paths["C"].path_weight == 0
+    assert paths["D"].vertexes == ["C", "B", "D"]
+    assert paths["D"].path_weight == 12
+    assert paths["E"].vertexes == ["C", "E"]
+    assert paths["E"].path_weight == 7
+    assert paths["F"].vertexes == ["C", "E", "F"]
+    assert paths["F"].path_weight == 8
 
-    w, p = dijkstra(graph, "D")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": 0,
-        "E": 6,
-        "F": 3,
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p["D"] == ["D"]
-    assert p["E"] == ["D", "E"]
-    assert p["F"] == ["D", "F"]
+    paths = dijkstra(graph, "D")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert paths["D"].vertexes == ["D"]
+    assert paths["D"].path_weight == 0
+    assert paths["E"].vertexes == ["D", "E"]
+    assert paths["E"].path_weight == 6
+    assert paths["F"].vertexes == ["D", "F"]
+    assert paths["F"].path_weight == 3
 
-    w, p = dijkstra(graph, "E")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": 0,
-        "F": 1,
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p["E"] == ["E"]
-    assert p["F"] == ["E", "F"]
+    paths = dijkstra(graph, "E")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["E"]
+    assert paths["E"].path_weight == 0
+    assert paths["F"].vertexes == ["E", "F"]
+    assert paths["F"].path_weight == 1
 
-    w, p = dijkstra(graph, "F")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": float("inf"),
-        "F": 0,
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p.get("E") is None
-    assert p["F"] == ["F"]
+    paths = dijkstra(graph, "F")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert len(paths["E"].vertexes) == 0
+    assert paths["E"].path_weight == float("inf")
+    assert paths["F"].vertexes == ["F"]
+    assert paths["F"].path_weight == 0
 
 
 @pytest.mark.parametrize(
@@ -100,80 +116,89 @@ def test_dijkstra_3_1(graph_type: GraphType):
 def test_dijkstra_3_2(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
     graph = graph_3_2(graph)
-    w, p = dijkstra(graph, "A")
-    assert w == {"C": 2, "B": 5, "A": 0, "D": float("inf"), "E": 7, "F": 8}
-    assert p["A"] == ["A"]
-    assert p["B"] == ["A", "B"]
-    assert p["C"] == ["A", "C"]
-    assert p.get("D") is None
-    assert p["E"] == ["A", "B", "E"]
-    assert p["F"] == ["A", "B", "E", "F"]
+    paths = dijkstra(graph, "A")
+    assert paths["A"].vertexes == ["A"]
+    assert paths["A"].path_weight == 0
+    assert paths["B"].vertexes == ["A", "B"]
+    assert paths["B"].path_weight == 5
+    assert paths["C"].vertexes == ["A", "C"]
+    assert paths["C"].path_weight == 2
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["A", "B", "E"]
+    assert paths["E"].path_weight == 7
+    assert paths["F"].vertexes == ["A", "B", "E", "F"]
+    assert paths["F"].path_weight == 8
 
-    w, p = dijkstra(graph, "B")
-    assert w == {
-        "A": float("inf"),
-        "B": 0,
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": 2,
-        "F": 3,
-    }
-    assert p.get("A") is None
-    assert p["B"] == ["B"]
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p["E"] == ["B", "E"]
-    assert p["F"] == ["B", "E", "F"]
+    paths = dijkstra(graph, "B")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["B"]
+    assert paths["B"].path_weight == 0
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["B", "E"]
+    assert paths["E"].path_weight == 2
+    assert paths["F"].vertexes == ["B", "E", "F"]
+    assert paths["F"].path_weight == 3
 
-    w, p = dijkstra(graph, "C")
-    assert w == {"A": float("inf"), "B": 8, "C": 0, "D": float("inf"), "E": 7, "F": 8}
-    assert p.get("A") is None
-    assert p["B"] == ["C", "B"]
-    assert p["C"] == ["C"]
-    assert p.get("D") is None
-    assert p["E"] == ["C", "E"]
-    assert p["F"] == ["C", "E", "F"]
+    paths = dijkstra(graph, "C")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["C", "B"]
+    assert paths["B"].path_weight == 8
+    assert paths["C"].vertexes == ["C"]
+    assert paths["C"].path_weight == 0
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["C", "E"]
+    assert paths["E"].path_weight == 7
+    assert paths["F"].vertexes == ["C", "E", "F"]
+    assert paths["F"].path_weight == 8
 
-    w, p = dijkstra(graph, "D")
-    assert w == {"A": float("inf"), "B": 4, "C": float("inf"), "D": 0, "E": 6, "F": 3}
-    assert p.get("A") is None
-    assert p["B"] == ["D", "B"]
-    assert p.get("C") is None
-    assert p["D"] == ["D"]
-    assert p["E"] == ["D", "E"]
-    assert p["F"] == ["D", "F"]
+    paths = dijkstra(graph, "D")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["D", "B"]
+    assert paths["B"].path_weight == 4
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert paths["D"].vertexes == ["D"]
+    assert paths["D"].path_weight == 0
+    assert paths["E"].vertexes == ["D", "E"]
+    assert paths["E"].path_weight == 6
+    assert paths["F"].vertexes == ["D", "F"]
+    assert paths["F"].path_weight == 3
 
-    w, p = dijkstra(graph, "E")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": 0,
-        "F": 1,
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p["E"] == ["E"]
-    assert p["F"] == ["E", "F"]
+    paths = dijkstra(graph, "E")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["E"]
+    assert paths["E"].path_weight == 0
+    assert paths["F"].vertexes == ["E", "F"]
+    assert paths["F"].path_weight == 1
 
-    w, p = dijkstra(graph, "F")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": float("inf"),
-        "F": 0,
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p.get("E") is None
-    assert p["F"] == ["F"]
+    paths = dijkstra(graph, "F")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert len(paths["E"].vertexes) == 0
+    assert paths["E"].path_weight == float("inf")
+    assert paths["F"].vertexes == ["F"]
+    assert paths["F"].path_weight == 0
 
 
 @pytest.mark.parametrize(
@@ -185,51 +210,65 @@ def test_dijkstra_3_2(graph_type: GraphType):
 def test_dijkstra_4_1(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
     graph = graph_4_1(graph)
-    w, p = dijkstra(graph, "A")
-    assert w == {"A": 0, "B": 10, "C": 30, "D": 31, "E": 60}
-    assert p["A"] == ["A"]
-    assert p["B"] == ["A", "B"]
-    assert p["C"] == ["A", "B", "C"]
-    assert p["D"] == ["A", "B", "C", "D"]
-    assert p["E"] == ["A", "B", "C", "E"]
+    paths = dijkstra(graph, "A")
+    assert paths["A"].vertexes == ["A"]
+    assert paths["A"].path_weight == 0
+    assert paths["B"].vertexes == ["A", "B"]
+    assert paths["B"].path_weight == 10
+    assert paths["C"].vertexes == ["A", "B", "C"]
+    assert paths["C"].path_weight == 30
+    assert paths["D"].vertexes == ["A", "B", "C", "D"]
+    assert paths["D"].path_weight == 31
+    assert paths["E"].vertexes == ["A", "B", "C", "E"]
+    assert paths["E"].path_weight == 60
 
-    w, p = dijkstra(graph, "B")
-    assert w == {"A": float("inf"), "B": 0, "C": 20, "D": 21, "E": 50}
-    assert p.get("A") is None
-    assert p["B"] == ["B"]
-    assert p["C"] == ["B", "C"]
-    assert p["D"] == ["B", "C", "D"]
-    assert p["E"] == ["B", "C", "E"]
+    paths = dijkstra(graph, "B")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["B"]
+    assert paths["B"].path_weight == 0
+    assert paths["C"].vertexes == ["B", "C"]
+    assert paths["C"].path_weight == 20
+    assert paths["D"].vertexes == ["B", "C", "D"]
+    assert paths["D"].path_weight == 21
+    assert paths["E"].vertexes == ["B", "C", "E"]
+    assert paths["E"].path_weight == 50
 
-    w, p = dijkstra(graph, "C")
-    assert w == {"A": float("inf"), "B": 2, "C": 0, "D": 1, "E": 30}
-    assert p.get("A") is None
-    assert p["B"] == ["C", "D", "B"]
-    assert p["C"] == ["C"]
-    assert p["D"] == ["C", "D"]
-    assert p["E"] == ["C", "E"]
+    paths = dijkstra(graph, "C")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["C", "D", "B"]
+    assert paths["B"].path_weight == 2
+    assert paths["C"].vertexes == ["C"]
+    assert paths["C"].path_weight == 0
+    assert paths["D"].vertexes == ["C", "D"]
+    assert paths["D"].path_weight == 1
+    assert paths["E"].vertexes == ["C", "E"]
+    assert paths["E"].path_weight == 30
 
-    w, p = dijkstra(graph, "D")
-    assert w == {"A": float("inf"), "B": 1, "C": 21, "D": 0, "E": 51}
-    assert p.get("A") is None
-    assert p["B"] == ["D", "B"]
-    assert p["C"] == ["D", "B", "C"]
-    assert p["D"] == ["D"]
-    assert p["E"] == ["D", "B", "C", "E"]
+    paths = dijkstra(graph, "D")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["D", "B"]
+    assert paths["B"].path_weight == 1
+    assert paths["C"].vertexes == ["D", "B", "C"]
+    assert paths["C"].path_weight == 21
+    assert paths["D"].vertexes == ["D"]
+    assert paths["D"].path_weight == 0
+    assert paths["E"].vertexes == ["D", "B", "C", "E"]
+    assert paths["E"].path_weight == 51
 
-    w, p = dijkstra(graph, "E")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": 0,
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p["E"] == ["E"]
+    paths = dijkstra(graph, "E")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["E"]
+    assert paths["E"].path_weight == 0
 
 
 @pytest.mark.parametrize(
@@ -241,66 +280,89 @@ def test_dijkstra_4_1(graph_type: GraphType):
 def test_dijkstra_4_2(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
     graph = graph_4_2(graph)
-    w, p = dijkstra(graph, "A")
-    assert w == {"A": 0, "B": 10, "C": 30, "D": 31, "E": 38, "F": 33}
-    assert p["A"] == ["A"]
-    assert p["B"] == ["A", "B"]
-    assert p["C"] == ["A", "B", "C"]
-    assert p["D"] == ["A", "B", "C", "D"]
-    assert p["E"] == ["A", "B", "C", "D", "F", "E"]
-    assert p["F"] == ["A", "B", "C", "D", "F"]
+    paths = dijkstra(graph, "A")
+    assert paths["A"].vertexes == ["A"]
+    assert paths["A"].path_weight == 0
+    assert paths["B"].vertexes == ["A", "B"]
+    assert paths["B"].path_weight == 10
+    assert paths["C"].vertexes == ["A", "B", "C"]
+    assert paths["C"].path_weight == 30
+    assert paths["D"].vertexes == ["A", "B", "C", "D"]
+    assert paths["D"].path_weight == 31
+    assert paths["E"].vertexes == ["A", "B", "C", "D", "F", "E"]
+    assert paths["E"].path_weight == 38
+    assert paths["F"].vertexes == ["A", "B", "C", "D", "F"]
+    assert paths["F"].path_weight == 33
 
-    w, p = dijkstra(graph, "B")
-    assert w == {"A": float("inf"), "B": 0, "C": 20, "D": 21, "E": 28, "F": 23}
-    assert p.get("A") is None
-    assert p["B"] == ["B"]
-    assert p["C"] == ["B", "C"]
-    assert p["D"] == ["B", "C", "D"]
-    assert p["E"] == ["B", "C", "D", "F", "E"]
-    assert p["F"] == ["B", "C", "D", "F"]
+    paths = dijkstra(graph, "B")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["B"]
+    assert paths["B"].path_weight == 0
+    assert paths["C"].vertexes == ["B", "C"]
+    assert paths["C"].path_weight == 20
+    assert paths["D"].vertexes == ["B", "C", "D"]
+    assert paths["D"].path_weight == 21
+    assert paths["E"].vertexes == ["B", "C", "D", "F", "E"]
+    assert paths["E"].path_weight == 28
+    assert paths["F"].vertexes == ["B", "C", "D", "F"]
+    assert paths["F"].path_weight == 23
 
-    w, p = dijkstra(graph, "C")
-    assert w == {"A": float("inf"), "B": 2, "C": 0, "D": 1, "E": 8, "F": 3}
-    assert p.get("A") is None
-    assert p["B"] == ["C", "D", "B"]
-    assert p["C"] == ["C"]
-    assert p["D"] == ["C", "D"]
-    assert p["E"] == ["C", "D", "F", "E"]
-    assert p["F"] == ["C", "D", "F"]
+    paths = dijkstra(graph, "C")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["C", "D", "B"]
+    assert paths["B"].path_weight == 2
+    assert paths["C"].vertexes == ["C"]
+    assert paths["C"].path_weight == 0
+    assert paths["D"].vertexes == ["C", "D"]
+    assert paths["D"].path_weight == 1
+    assert paths["E"].vertexes == ["C", "D", "F", "E"]
+    assert paths["E"].path_weight == 8
+    assert paths["F"].vertexes == ["C", "D", "F"]
+    assert paths["F"].path_weight == 3
 
-    w, p = dijkstra(graph, "D")
-    assert w == {"A": float("inf"), "B": 1, "C": 21, "D": 0, "E": 7, "F": 2}
-    assert p.get("A") is None
-    assert p["B"] == ["D", "B"]
-    assert p["C"] == ["D", "B", "C"]
-    assert p["D"] == ["D"]
-    assert p["E"] == ["D", "F", "E"]
-    assert p["F"] == ["D", "F"]
+    paths = dijkstra(graph, "D")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["D", "B"]
+    assert paths["B"].path_weight == 1
+    assert paths["C"].vertexes == ["D", "B", "C"]
+    assert paths["C"].path_weight == 21
+    assert paths["D"].vertexes == ["D"]
+    assert paths["D"].path_weight == 0
+    assert paths["E"].vertexes == ["D", "F", "E"]
+    assert paths["E"].path_weight == 7
+    assert paths["F"].vertexes == ["D", "F"]
+    assert paths["F"].path_weight == 2
 
-    w, p = dijkstra(graph, "E")
-    assert w == {
-        "A": float("inf"),
-        "B": float("inf"),
-        "C": float("inf"),
-        "D": float("inf"),
-        "E": 0,
-        "F": float("inf"),
-    }
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p.get("D") is None
-    assert p["E"] == ["E"]
-    assert p.get("F") is None
+    paths = dijkstra(graph, "E")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert len(paths["D"].vertexes) == 0
+    assert paths["D"].path_weight == float("inf")
+    assert paths["E"].vertexes == ["E"]
+    assert paths["E"].path_weight == 0
+    assert len(paths["F"].vertexes) == 0
+    assert paths["F"].path_weight == float("inf")
 
-    w, p = dijkstra(graph, "F")
-    assert w == {"A": float("inf"), "B": 3, "C": 23, "D": 2, "E": 5, "F": 0}
-    assert p.get("A") is None
-    assert p["B"] == ["F", "D", "B"]
-    assert p["C"] == ["F", "D", "B", "C"]
-    assert p["D"] == ["F", "D"]
-    assert p["E"] == ["F", "E"]
-    assert p["F"] == ["F"]
+    paths = dijkstra(graph, "F")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["F", "D", "B"]
+    assert paths["B"].path_weight == 3
+    assert paths["C"].vertexes == ["F", "D", "B", "C"]
+    assert paths["C"].path_weight == 23
+    assert paths["D"].vertexes == ["F", "D"]
+    assert paths["D"].path_weight == 2
+    assert paths["E"].vertexes == ["F", "E"]
+    assert paths["E"].path_weight == 5
+    assert paths["F"].vertexes == ["F"]
+    assert paths["F"].path_weight == 0
 
 
 @pytest.mark.parametrize(
@@ -312,33 +374,46 @@ def test_dijkstra_4_2(graph_type: GraphType):
 def test_dijkstra_5(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
     graph = graph_5(graph)
-    w, p = dijkstra(graph, "A")
-    assert w == {"A": 0, "B": 2, "C": 1, "D": 3}
-    assert p["A"] == ["A"]
-    assert p["B"] == ["A", "B"]
-    assert p["C"] == ["A", "C"]
-    assert p["D"] == ["A", "D"]
+    paths = dijkstra(graph, "A")
 
-    w, p = dijkstra(graph, "B")
-    assert w == {"A": 5, "B": 0, "C": 4, "D": 8}
-    assert p["A"] == ["B", "C", "A"]
-    assert p["B"] == ["B"]
-    assert p["C"] == ["B", "C"]
-    assert p["D"] == ["B", "C", "A", "D"]
+    assert paths["A"].vertexes == ["A"]
+    assert paths["A"].path_weight == 0
+    assert paths["B"].vertexes == ["A", "B"]
+    assert paths["B"].path_weight == 2
+    assert paths["C"].vertexes == ["A", "C"]
+    assert paths["C"].path_weight == 1
+    assert paths["D"].vertexes == ["A", "D"]
+    assert paths["D"].path_weight == 3
 
-    w, p = dijkstra(graph, "C")
-    assert w == {"A": 1, "B": 3, "C": 0, "D": 4}
-    assert p["A"] == ["C", "A"]
-    assert p["B"] == ["C", "A", "B"]
-    assert p["C"] == ["C"]
-    assert p["D"] == ["C", "A", "D"]
+    paths = dijkstra(graph, "B")
+    assert paths["A"].vertexes == ["B", "C", "A"]
+    assert paths["A"].path_weight == 5
+    assert paths["B"].vertexes == ["B"]
+    assert paths["B"].path_weight == 0
+    assert paths["C"].vertexes == ["B", "C"]
+    assert paths["C"].path_weight == 4
+    assert paths["D"].vertexes == ["B", "C", "A", "D"]
+    assert paths["D"].path_weight == 8
 
-    w, p = dijkstra(graph, "D")
-    assert w == {"A": float("inf"), "B": float("inf"), "C": float("inf"), "D": 0}
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p.get("C") is None
-    assert p["D"] == ["D"]
+    paths = dijkstra(graph, "C")
+    assert paths["A"].vertexes == ["C", "A"]
+    assert paths["A"].path_weight == 1
+    assert paths["B"].vertexes == ["C", "A", "B"]
+    assert paths["B"].path_weight == 3
+    assert paths["C"].vertexes == ["C"]
+    assert paths["C"].path_weight == 0
+    assert paths["D"].vertexes == ["C", "A", "D"]
+    assert paths["D"].path_weight == 4
+
+    paths = dijkstra(graph, "D")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert len(paths["C"].vertexes) == 0
+    assert paths["C"].path_weight == float("inf")
+    assert paths["D"].vertexes == ["D"]
+    assert paths["D"].path_weight == 0
 
 
 @pytest.mark.parametrize(
@@ -350,39 +425,53 @@ def test_dijkstra_5(graph_type: GraphType):
 def test_dijkstra_6(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
     graph = graph_6(graph)
-    w, p = dijkstra(graph, "A")
-    assert w == {"A": 0, "B": 2, "C": 4}
-    assert p["A"] == ["A"]
-    assert p["B"] == ["A", "B"]
-    assert p["C"] == ["A", "B", "C"]
+    paths = dijkstra(graph, "A")
+    assert paths["A"].vertexes == ["A"]
+    assert paths["A"].path_weight == 0
+    assert paths["B"].vertexes == ["A", "B"]
+    assert paths["B"].path_weight == 2
+    assert paths["C"].vertexes == ["A", "B", "C"]
+    assert paths["C"].path_weight == 4
 
-    w, p = dijkstra(graph, "B")
-    assert w == {"A": float("inf"), "B": 0, "C": 2}
-    assert p.get("A") is None
-    assert p["B"] == ["B"]
-    assert p["C"] == ["B", "C"]
+    paths = dijkstra(graph, "B")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert paths["B"].vertexes == ["B"]
+    assert paths["B"].path_weight == 0
+    assert paths["C"].vertexes == ["B", "C"]
+    assert paths["C"].path_weight == 2
 
-    w, p = dijkstra(graph, "C")
-    assert w == {"A": float("inf"), "B": float("inf"), "C": 0}
-    assert p.get("A") is None
-    assert p.get("B") is None
-    assert p["C"] == ["C"]
+    paths = dijkstra(graph, "C")
+    assert len(paths["A"].vertexes) == 0
+    assert paths["A"].path_weight == float("inf")
+    assert len(paths["B"].vertexes) == 0
+    assert paths["B"].path_weight == float("inf")
+    assert paths["C"].vertexes == ["C"]
+    assert paths["C"].path_weight == 0
 
 
 @pytest.mark.parametrize(
-    "graph_type",
+    "graph_type, directed, weighted",
     [
-        GraphType.AdjList,
+        [GraphType.AdjList, True, True],
+        [GraphType.AdjList, True, False],
+        [GraphType.AdjList, False, True],
+        [GraphType.AdjList, False, False],
     ],
 )
-def test_dijkstra_7(graph_type: GraphType):
-    graph = create_graph(graph_type, directed=True, weighted=True)
+def test_dijkstra_7(graph_type: GraphType, directed, weighted):
+    graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = graph_7(graph)
-    w, p = dijkstra(graph, "Cab")
-    assert w == {"Cab": 0, "Car": 1, "Bar": 2, "Cat": 1, "Bat": 2, "Mat": 2}
-    assert p["Cab"] == ["Cab"]
-    assert p["Car"] == ["Cab", "Car"]
-    assert p["Cat"] == ["Cab", "Cat"]
-    assert p["Bar"] == ["Cab", "Car", "Bar"]
-    assert p["Bat"] == ["Cab", "Cat", "Bat"]
-    assert p["Mat"] == ["Cab", "Cat", "Mat"]
+    paths = dijkstra(graph, "Cab")
+    assert paths["Cab"].vertexes == ["Cab"]
+    assert paths["Cab"].path_weight == 0
+    assert paths["Car"].vertexes == ["Cab", "Car"]
+    assert paths["Car"].path_weight == 1
+    assert paths["Cat"].vertexes == ["Cab", "Cat"]
+    assert paths["Cat"].path_weight == 1
+    assert paths["Bar"].vertexes == ["Cab", "Car", "Bar"]
+    assert paths["Bar"].path_weight == 2
+    assert paths["Bat"].vertexes == ["Cab", "Cat", "Bat"]
+    assert paths["Bat"].path_weight == 2
+    assert paths["Mat"].vertexes == ["Cab", "Cat", "Mat"]
+    assert paths["Mat"].path_weight == 2

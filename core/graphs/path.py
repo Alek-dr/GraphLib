@@ -23,6 +23,8 @@ class Path:
             else:
                 edge = self.edges[i] if len(self.edges) else "()"
                 s += f"{v} -> ({edge}) -> "
+        if s == "":
+            s += f"-x- {self.dst_vertex}"
         return s
 
     def add_step(self, edg: edge):
