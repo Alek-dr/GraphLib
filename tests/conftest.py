@@ -307,3 +307,44 @@ def graph_9():
     graph.add_edge(2, 3)
     graph.add_edge(2, 3)
     return graph
+
+
+def graph_10():
+    """Алгоритмы для начинающих. Стр. 196"""
+    graph = create_graph(directed=True, weighted=False)
+    zero = Node(0)
+    one = Node(1)
+    two = Node(2)
+    three = Node(3)
+    four = Node(4)
+    five = Node(5)
+    six = Node(6)
+    seven = Node(7)
+    eight = Node(8)
+    nine = Node(9)
+    ten = Node(10)
+
+    graph.add_node(zero)
+    graph.add_node(one)
+    graph.add_node(two)
+    graph.add_node(three)
+    graph.add_node(four)
+    graph.add_node(five)
+    graph.add_node(six)
+    graph.add_node(seven)
+    graph.add_node(eight)
+    graph.add_node(nine)
+    graph.add_node(ten)
+
+    graph.add_edge(0, 1)
+    graph.add_edge(1, 2)
+    graph.add_edge(0, 3)
+    graph.add_edge(3, 4)
+    graph.add_edge(4, 2)
+    graph.add_edge(4, 5)
+    graph.add_edge(6, 3)
+    graph.add_edge(6, 7)
+    graph.add_edge(8, 6)
+    graph.add_edge(8, 9)
+    graph.add_edge(9, 7)
+    return graph

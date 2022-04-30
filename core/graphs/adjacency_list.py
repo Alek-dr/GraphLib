@@ -2,7 +2,7 @@ from typing import Dict, Optional, Union
 
 from core.exceptions import EdgeAddError, EdgeRemoveError
 from core.graphs.graph import AbstractGraph, edge
-from core.graphs.node import AbstractNode
+from core.graphs.node import AbstractNode, Node
 
 
 class AdjListGraph(AbstractGraph):
@@ -137,8 +137,10 @@ class AdjListGraph(AbstractGraph):
             raise EdgeAddError(f"Src or dst vertex does not exists")
         return
 
-    def get_adj_edges(self, node_name: Union[str, id]) -> edge:
-        for item in self.adj_list[node_name]:
+    def get_adj_edges(self, node: Union[str, id, Node]) -> edge:
+        if isinstance(node, Node):
+            node = node.name
+        for item in self.adj_list[node]:
             yield item
 
     def get_edges(self) -> edge:
