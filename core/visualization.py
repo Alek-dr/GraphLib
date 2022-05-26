@@ -73,15 +73,23 @@ def graph_2(graph) -> AbstractGraph:
 
 def _edge(v1, v2, line_style, **kwargs):
     edge = f"{v1} {line_style} {v2}"
+    if len(kwargs):
+        edge += " ["
+        for k, v in kwargs.items():
+            edge += f"{k}={v}"
+        edge += "]"
     return edge
 
 
-def convert_to_dot(graph: AbstractGraph, graph_name: str) -> str:
+def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> str:
     graph_components = []
     graph_type = "digraph" if graph.directed else "graph"
     edge_style = "->" if graph.directed else "--"
+    attrs = {}
     for adg in graph.get_edges():
-        e = _edge(adg.src, adg.dst, edge_style)
+        if edge_label:
+            attrs['label'] = adg.name
+        e = _edge(adg.src, adg.dst, edge_style, **attrs)
         graph_components.append(e)
     template = """{{ graph_type }} {{ graph_name }} {
     {% for v in graph_components %}
@@ -98,8 +106,8 @@ def convert_to_dot(graph: AbstractGraph, graph_name: str) -> str:
     return j2_template.render(attrs)
 
 
-def save_graph_img(graph, graph_name, output):
-    s = convert_to_dot(graph, graph_name)
+def save_graph_img(graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True):
+    s = convert_to_dot(graph, graph_name, edge_label)
     dot = pydot.graph_from_dot_data(s)[0]
     dot.write_png(output)
 
