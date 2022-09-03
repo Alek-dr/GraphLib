@@ -70,3 +70,10 @@ class AbstractGraph(metaclass=ABCMeta):
         Check if graph is simple
         """
         pass
+
+    @property
+    def n_vertex(self) -> int:
+        """
+        Get vertex number
+        """
+        return len(self.vertexes)

@@ -1,0 +1,54 @@
+from collections import OrderedDict, deque
+from typing import Dict, Tuple, Union
+
+from core.algorithms.utils import update_path
+from core.graphs.gpath import GPath
+from core.graphs.graph import AbstractGraph, edge
+
+
+def bellman_ford(
+        graph: AbstractGraph, origin: Union[str, int]
+) -> Tuple[Dict[Union[int, str], GPath], bool]:
+    """
+    Bellman–Ford algorithm
+    :param graph: graph object
+    :param origin: name or id of origin node
+    :return: dict of paths, ncc value true, if graph has no negative-weight cycle, false otherwise
+    """
+    if not graph[origin]:
+        raise Exception(f"There no such node: {origin}")
+    paths = OrderedDict()
+    inqueue = {}
+    for v in graph.vertexes:
+        path = GPath(v.name)
+        path.path_weight = float("inf")
+        paths[v.name] = path
+        inqueue[v.name] = False
+    paths[origin].path_weight = 0
+    paths[origin].add_step(edge(origin, origin, 0, None))
+    queue = deque()
+    e = edge(origin, origin, 0, None)
+    queue.append(e)
+    signal_edge = edge(-1, -1, 0, None)
+    queue.append(signal_edge)
+    inqueue[origin] = True
+    i = 0
+    while len(queue) != 1 and i < graph.n_vertex:
+        curr_edge = queue.popleft()
+        if (curr_edge.src == -1) and (curr_edge.dst == -1):
+            i += 1
+            queue.append(signal_edge)
+        else:
+            inqueue[curr_edge.dst] = False
+            for e in graph.get_adj_edges(curr_edge.dst):
+                d = paths[e.src].path_weight + e.weight
+                if paths[e.dst].path_weight > d:
+                    paths = update_path(paths, e, d)
+                    if not inqueue[e.dst]:
+                        queue.append(e)
+                        inqueue[e.dst] = True
+    ncc = i < graph.n_vertex
+    return paths, ncc
+
+
+

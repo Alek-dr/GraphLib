@@ -1,5 +1,5 @@
-from jinja2 import Template
 import pydot
+from jinja2 import Template
 
 from core.graphs import Node, create_graph
 from core.graphs.graph import AbstractGraph
@@ -88,7 +88,7 @@ def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> s
     attrs = {}
     for adg in graph.get_edges():
         if edge_label:
-            attrs['label'] = adg.name
+            attrs["label"] = adg.name
         e = _edge(adg.src, adg.dst, edge_style, **attrs)
         graph_components.append(e)
     template = """{{ graph_type }} {{ graph_name }} {
@@ -100,19 +100,21 @@ def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> s
     attrs = {
         "graph_type": graph_type,
         "graph_name": graph_name,
-        "graph_components": graph_components
+        "graph_components": graph_components,
     }
     j2_template = Template(template)
     return j2_template.render(attrs)
 
 
-def save_graph_img(graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True):
+def save_graph_img(
+    graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True
+):
     s = convert_to_dot(graph, graph_name, edge_label)
     dot = pydot.graph_from_dot_data(s)[0]
     dot.write_png(output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     graph = create_graph(directed=True)
     graph = graph_2(graph)
     save_graph_img(graph, "graph_2", f"../tests/graph_images/graph_2.png")

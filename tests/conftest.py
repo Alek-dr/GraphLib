@@ -348,3 +348,28 @@ def graph_10():
     graph.add_edge(8, 9)
     graph.add_edge(9, 7)
     return graph
+
+
+def graph_11():
+    """Алгоритмы для начинающих. Стр. 253"""
+    graph = create_graph(directed=True, weighted=True)
+    zero = Node(0)
+    one = Node(1)
+    two = Node(2)
+    three = Node(3)
+    four = Node(4)
+
+    graph.add_node(zero)
+    graph.add_node(one)
+    graph.add_node(two)
+    graph.add_node(three)
+    graph.add_node(four)
+
+    graph.add_edge(0, 1, 1)
+    graph.add_edge(1, 2, 2)
+    graph.add_edge(2, 3, 3)
+    graph.add_edge(2, 3, 3)
+    graph.add_edge(3, 1, -6)
+    graph.add_edge(3, 4, 4)
+    graph.add_edge(4, 0, 5)
+    return graph

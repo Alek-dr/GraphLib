@@ -3,7 +3,7 @@ import pytest
 from core.algorithms import topological_sort
 from core.graphs import GraphType, create_graph
 from core.graphs.graph import AbstractGraph
-from tests.conftest import graph_10, graph_1
+from tests.conftest import graph_1, graph_10
 
 
 def check_topological_sort(graph: AbstractGraph) -> bool:

@@ -43,6 +43,11 @@ def _dfs(
 
 
 def topological_sort(graph: AbstractGraph) -> List[Union[int, str]]:
+    """
+    Topological sort algorithm
+    :param graph: graph object
+    :return: list of sorted nodes
+    """
     visited = set()
     sorted_v = [None for _ in range(len(graph.vertexes))]
     i = len(sorted_v) - 1
@@ -52,3 +57,17 @@ def topological_sort(graph: AbstractGraph) -> List[Union[int, str]]:
             sorted_v[i] = v.name
             i -= 1
     return sorted_v
+
+
+def check_topological_sort(graph: AbstractGraph) -> bool:
+    """
+    True if nodes are correctly sorted
+    """
+    sorted_v = topological_sort(graph)
+    for i, v in enumerate(sorted_v):
+        edges = graph.get_adj_edges(v)
+        for edge in edges:
+            ind = sorted_v.index(edge.dst)
+            if ind < i:
+                return False
+    return True

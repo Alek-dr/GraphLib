@@ -1,7 +1,7 @@
 from core.graphs.graph import edge
 
 
-class Path:
+class GPath:
     def __init__(self, dst_vertex):
         self.dst_vertex = dst_vertex
         self.vertexes = []
