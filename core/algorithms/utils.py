@@ -1,19 +1,19 @@
 from typing import Dict, Union
 
-from core.graphs.gpath import GPath
+from core.graphs.walk import Walk
 from core.graphs.graph import edge
 
 
-def update_path(paths: Dict, e: edge, d: Union[int, str]) -> Dict:
+def update_walks(walks: Dict, e: edge, d: Union[int, str]) -> Dict:
     """
-    Update path dict
+    Update walks dict
     """
-    if len(paths[e.dst].edges) == 0:
-        paths[e.dst].add_step(e)
-        paths[e.dst] = paths[e.src] + paths[e.dst]
+    if len(walks[e.dst].edges) == 0:
+        walks[e.dst].add_step(e)
+        walks[e.dst] = walks[e.src] + walks[e.dst]
     else:
-        path = GPath(e.dst)
+        path = Walk(e.dst)
         path.add_step(e)
-        paths[e.dst] = paths[e.src] + path
-    paths[e.dst].path_weight = d
-    return paths
+        walks[e.dst] = walks[e.src] + path
+    walks[e.dst].weight = d
+    return walks

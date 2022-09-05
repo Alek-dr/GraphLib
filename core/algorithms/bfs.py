@@ -2,13 +2,13 @@ from collections import OrderedDict, deque
 from typing import Dict, Union
 
 from core.exceptions import VertexNotFound
-from core.graphs.gpath import GPath
+from core.graphs.walk import Walk
 from core.graphs.graph import AbstractGraph, edge
 
 
 def bfs(
     graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None
-) -> Dict[Union[int, str], GPath]:
+) -> Dict[Union[int, str], Walk]:
     """
     BFS algorithm
     :param graph: graph object
@@ -18,7 +18,7 @@ def bfs(
     """
     if (target is not None) and (not graph[target]):
         raise VertexNotFound(f"Cannot find vertex {target}")
-    p = GPath(origin)
+    p = Walk(origin)
     if origin == target:
         return {origin: p}
     visited = set()
@@ -26,19 +26,19 @@ def bfs(
     queue = deque()
     e = edge(origin, origin, 0, None)
     queue.append(e)
-    paths = OrderedDict()
-    path = GPath(origin)
-    path.add_step(e)
-    paths[origin] = path
+    walks = OrderedDict()
+    walk = Walk(origin)
+    walk.add_step(e)
+    walks[origin] = walk
     while queue:
         curr_edge = queue.pop()
         for e in graph.get_adj_edges(curr_edge.dst):
             if e.dst not in visited:
-                path = GPath(e.dst)
+                path = Walk(e.dst)
                 path.add_step(e)
-                paths[e.dst] = paths[e.src] + path
-                if (target is not None) and (paths.get(target)):
-                    return {target: paths[target]}
+                walks[e.dst] = walks[e.src] + path
+                if (target is not None) and (walks.get(target)):
+                    return {target: walks[target]}
                 queue.appendleft(e)
                 visited.add(e.dst)
-    return paths
+    return walks
