@@ -2,12 +2,12 @@ from collections import OrderedDict
 from typing import Dict, Union
 
 from core.algorithms.utils import update_walks
-from core.graphs.walk import Walk
 from core.graphs.graph import AbstractGraph, edge
+from core.graphs.walk import Walk
 
 
 def dijkstra(
-        graph: AbstractGraph, origin: Union[str, int]
+    graph: AbstractGraph, origin: Union[str, int]
 ) -> Dict[Union[int, str], Walk]:
     """
     Dijkstra's algorithm

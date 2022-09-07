@@ -1,7 +1,7 @@
 from typing import Dict, Union
 
-from core.graphs.walk import Walk
 from core.graphs.graph import edge
+from core.graphs.walk import Walk
 
 
 def update_walks(walks: Dict, e: edge, d: Union[int, str]) -> Dict:

@@ -1,8 +1,8 @@
 from collections import OrderedDict, deque
 from typing import Dict, Union
 
-from core.graphs.walk import Walk
 from core.graphs.graph import AbstractGraph, edge
+from core.graphs.walk import Walk
 
 
 def dfs(

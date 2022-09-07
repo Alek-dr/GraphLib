@@ -2,12 +2,12 @@ from collections import OrderedDict, deque
 from typing import Dict, Tuple, Union
 
 from core.algorithms.utils import update_walks
-from core.graphs.walk import Walk
 from core.graphs.graph import AbstractGraph, edge
+from core.graphs.walk import Walk
 
 
 def bellman_ford(
-        graph: AbstractGraph, origin: Union[str, int]
+    graph: AbstractGraph, origin: Union[str, int]
 ) -> Tuple[Dict[Union[int, str], Walk], bool]:
     """
     Bellman–Ford algorithm
@@ -49,6 +49,3 @@ def bellman_ford(
                         inqueue[e.dst] = True
     ncc = i < graph.n_vertex
     return walks, ncc
-
-
-

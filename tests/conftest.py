@@ -1,7 +1,17 @@
+import networkx as nx
 import pytest
 
 from core.graphs import Node, create_graph
 from core.graphs.graph import AbstractGraph
+
+
+def create_nxgraph(graph: AbstractGraph) -> nx.Graph:
+    G = nx.Graph()
+    for v in graph.vertexes:
+        G.add_node(v.name)
+    for edge in graph.get_edges():
+        G.add_edge(edge.src, edge.dst, weight=edge.weight)
+    return G
 
 
 def graph_1(graph):
@@ -372,4 +382,32 @@ def graph_11():
     graph.add_edge(3, 1, -6)
     graph.add_edge(3, 4, 4)
     graph.add_edge(4, 0, 5)
+    return graph
+
+
+def graph_12():
+    """
+    https://ru.wikipedia.org/wiki/Компонента_связности_графа
+    """
+    graph = create_graph(directed=False, weighted=False)
+    a = Node("a")
+    b = Node("b")
+    c = Node("c")
+    d = Node("d")
+    e = Node("e")
+    f = Node("f")
+    g = Node("g")
+
+    graph.add_node(a)
+    graph.add_node(b)
+    graph.add_node(c)
+    graph.add_node(d)
+    graph.add_node(e)
+    graph.add_node(f)
+    graph.add_node(g)
+
+    graph.add_edge("a", "b")
+    graph.add_edge("b", "c")
+    graph.add_edge("c", "d")
+    graph.add_edge("f", "g")
     return graph

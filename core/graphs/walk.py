@@ -63,7 +63,7 @@ class Walk:
 
     def is_path(self) -> bool:
         """
-        If walk is train and all vertices are distinct then the trail is a path
+        If walk is trail and all vertices are distinct then the trail is a path
         """
         return self.is_trail() and (len(self.vertexes) == len(set(self.vertexes)))
 

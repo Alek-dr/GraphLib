@@ -5,7 +5,7 @@ description = "Graphs and algorithms"
 authors = ["A.Barmin"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 Jinja2 = "^3.1.2"
 pydot = "^1.4.2"
 
@@ -14,6 +14,7 @@ pytest = "^7.1.1"
 isort = "^5.10.1"
 black = "^22.3.0"
 flake8 = "^4.0.1"
+networkx = "^2.8.6"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
