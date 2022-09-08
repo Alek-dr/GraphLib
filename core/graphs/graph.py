@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
-from collections import namedtuple
-from typing import Dict, Union
+from collections import namedtuple, deque
+from typing import Dict, Union, Generator, Set
 
 from core.graphs.utils import edge_name_generator
 
@@ -77,3 +77,68 @@ class AbstractGraph(metaclass=ABCMeta):
         Get vertex number
         """
         return len(self.vertexes)
+
+    @property
+    def is_directed(self) -> bool:
+        return self.directed
+
+    def connected_components(self,
+                             ) -> Generator[Set[Union[str, int]], None, None]:
+        """
+        Return set of connected components
+        """
+
+        def _dfs(graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None):
+            if (target is not None) and (not graph[target]):
+                raise Exception("There no target node in graph")
+            if origin == target:
+                return {origin}
+            stack = deque()
+            stack.append(edge(origin, origin, 0, None))
+            visited = set()
+            while stack:
+                curr_edge = stack.pop()
+                if curr_edge.dst not in visited:
+                    visited.add(curr_edge.dst)
+                    edges = [e for e in graph.get_adj_edges(curr_edge.dst)]
+                    for e in reversed(edges):
+                        if e.dst not in visited:
+                            stack.append(e)
+                            if target is not None:
+                                return visited
+                    edges.clear()
+            return visited
+
+        visited = set()
+        for v in self.vertexes:
+            if v.name not in visited:
+                connected = _dfs(self, v.name)
+                for vertex in connected:
+                    visited.add(vertex)
+                yield connected
+
+    def is_connected(self) -> bool:
+        """
+        True if graph is connected
+        """
+        # TODO: check graph is simples
+        components = []
+        for cc in self.connected_components():
+            components.append(cc)
+        if len(components) == 1:
+            if len(components[0]) == self.n_vertex:
+                return True
+        return False
+
+    def is_eulerian(self) -> bool:
+        if self.is_directed:
+            pass
+        else:
+            if self.is_connected():
+                for d in self.deg().values():
+                    if d // 2 != 0:
+                        return False
+                return True
+            else:
+                return False
+        return True

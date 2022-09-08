@@ -71,6 +71,57 @@ def graph_2(graph) -> AbstractGraph:
     return graph
 
 
+def graph_8():
+    graph = create_graph(directed=False, weighted=False)
+    node1 = Node(1)
+    node2 = Node(2)
+    node3 = Node(3)
+    node4 = Node(4)
+
+    graph.add_node(node1)
+    graph.add_node(node2)
+    graph.add_node(node3)
+    graph.add_node(node4)
+
+    graph.add_edge(1, 2)
+    graph.add_edge(1, 3)
+    graph.add_edge(1, 3)
+    graph.add_edge(2, 4)
+    graph.add_edge(2, 2)
+    graph.add_edge(3, 4)
+    graph.add_edge(3, 4)
+    graph.add_edge(3, 4)
+    return graph
+
+
+def graph_12():
+    """
+    https://ru.wikipedia.org/wiki/Компонента_связности_графа
+    """
+    graph = create_graph(directed=False, weighted=False)
+    a = Node("a")
+    b = Node("b")
+    c = Node("c")
+    d = Node("d")
+    e = Node("e")
+    f = Node("f")
+    g = Node("g")
+
+    graph.add_node(a)
+    graph.add_node(b)
+    graph.add_node(c)
+    graph.add_node(d)
+    graph.add_node(e)
+    graph.add_node(f)
+    graph.add_node(g)
+
+    graph.add_edge("a", "b")
+    graph.add_edge("b", "c")
+    graph.add_edge("c", "d")
+    graph.add_edge("f", "g")
+    return graph
+
+
 def _edge(v1, v2, line_style, **kwargs):
     edge = f"{v1} {line_style} {v2}"
     if len(kwargs):
@@ -81,16 +132,35 @@ def _edge(v1, v2, line_style, **kwargs):
     return edge
 
 
+def _vertex(v, **kwargs):
+    v = f"{v}"
+    if len(kwargs):
+        v += " ["
+        for k, v in kwargs.items():
+            v += f"{k}={v}"
+        v += "]"
+    return v
+
+
 def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> str:
     graph_components = []
     graph_type = "digraph" if graph.directed else "graph"
     edge_style = "->" if graph.directed else "--"
     attrs = {}
-    for adg in graph.get_edges():
+    v_set = set()
+    for adj in graph.get_edges():
         if edge_label:
-            attrs["label"] = adg.name
-        e = _edge(adg.src, adg.dst, edge_style, **attrs)
+            attrs["label"] = adj.name
+        e = _edge(adj.src, adj.dst, edge_style, **attrs)
+        v_set.add(adj.src)
+        v_set.add(adj.dst)
         graph_components.append(e)
+    for v in graph.vertexes:
+        if v.name not in v_set:
+            vertex_ = _vertex(v)
+            graph_components.append(vertex_)
+        else:
+            v_set.remove(v.name)
     template = """{{ graph_type }} {{ graph_name }} {
     {% for v in graph_components %}
         {{ v }}
@@ -107,7 +177,7 @@ def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> s
 
 
 def save_graph_img(
-    graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True
+        graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True
 ):
     s = convert_to_dot(graph, graph_name, edge_label)
     dot = pydot.graph_from_dot_data(s)[0]
@@ -115,6 +185,6 @@ def save_graph_img(
 
 
 if __name__ == "__main__":
-    graph = create_graph(directed=True)
-    graph = graph_2(graph)
-    save_graph_img(graph, "graph_2", f"../tests/graph_images/graph_2.png")
+    # g = create_graph(directed=True)
+    graph = graph_8()
+    save_graph_img(graph, "graph_2", f"../tests/graph_images/graph_8.png")
