@@ -65,10 +65,18 @@ class Walk:
         """
         If walk is trail and all vertices are distinct then the trail is a path
         """
-        return self.is_trail() and (len(self.vertexes) == len(set(self.vertexes)))
+        return self.is_trail() and (
+            len(self.vertexes) == len(set(self.vertexes))
+        )
 
     def is_closed(self) -> bool:
         """
         Train is closed if initial vertex = final vertex
         """
         return self.initial_vertex == self.final_vertex
+
+    def is_cycle(self) -> bool:
+        """
+        Cloased path containing at least one edge is cycle
+        """
+        return self.is_closed() and len(self.edges) > 0

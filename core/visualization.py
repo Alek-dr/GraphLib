@@ -142,7 +142,9 @@ def _vertex(v, **kwargs):
     return v
 
 
-def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> str:
+def convert_to_dot(
+    graph: AbstractGraph, graph_name: str, edge_label: bool
+) -> str:
     graph_components = []
     graph_type = "digraph" if graph.directed else "graph"
     edge_style = "->" if graph.directed else "--"
@@ -177,7 +179,7 @@ def convert_to_dot(graph: AbstractGraph, graph_name: str, edge_label: bool) -> s
 
 
 def save_graph_img(
-        graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True
+    graph: AbstractGraph, graph_name: str, output: str, edge_label: bool = True
 ):
     s = convert_to_dot(graph, graph_name, edge_label)
     dot = pydot.graph_from_dot_data(s)[0]

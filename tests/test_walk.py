@@ -63,3 +63,19 @@ def test_is_not_trail_2():
     w.edges = [1, 2, 3, 3]
     w.weight = 3
     assert not w.is_trail()
+
+
+def test_is_cycle_1():
+    w = Walk("d")
+    w.vertexes = ["a", "b", "c", "d", "a"]
+    w.edges = [1, 2, 3, 3]
+    w.weight = 3
+    assert w.is_cycle()
+
+
+def test_is_cycle_2():
+    w = Walk("d")
+    w.vertexes = ["a", "a"]
+    w.edges = []
+    w.weight = 3
+    assert not w.is_cycle()

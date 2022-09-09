@@ -5,6 +5,7 @@ from typing import Dict, Union, Generator, Set
 from core.graphs.utils import edge_name_generator
 
 from .node import AbstractNode
+from ..exceptions import GraphTypeException
 
 edge = namedtuple("edge", "src,dst,weight,name")
 
@@ -82,32 +83,37 @@ class AbstractGraph(metaclass=ABCMeta):
     def is_directed(self) -> bool:
         return self.directed
 
-    def connected_components(self,
-                             ) -> Generator[Set[Union[str, int]], None, None]:
+    def connected_components(
+        self,
+    ) -> Generator[Set[Union[str, int]], None, None]:
         """
         Return set of connected components
         """
 
-        def _dfs(graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None):
+        def _dfs(
+            graph: AbstractGraph,
+            origin: Union[str, int],
+            target: Union[str, int] = None,
+        ):
             if (target is not None) and (not graph[target]):
                 raise Exception("There no target node in graph")
             if origin == target:
                 return {origin}
             stack = deque()
             stack.append(edge(origin, origin, 0, None))
-            visited = set()
+            visited_ = set()
             while stack:
                 curr_edge = stack.pop()
-                if curr_edge.dst not in visited:
-                    visited.add(curr_edge.dst)
+                if curr_edge.dst not in visited_:
+                    visited_.add(curr_edge.dst)
                     edges = [e for e in graph.get_adj_edges(curr_edge.dst)]
                     for e in reversed(edges):
-                        if e.dst not in visited:
+                        if e.dst not in visited_:
                             stack.append(e)
                             if target is not None:
-                                return visited
+                                return visited_
                     edges.clear()
-            return visited
+            return visited_
 
         visited = set()
         for v in self.vertexes:
@@ -121,7 +127,7 @@ class AbstractGraph(metaclass=ABCMeta):
         """
         True if graph is connected
         """
-        # TODO: check graph is simples
+        # TODO: check graph is simple
         components = []
         for cc in self.connected_components():
             components.append(cc)
@@ -132,7 +138,7 @@ class AbstractGraph(metaclass=ABCMeta):
 
     def is_eulerian(self) -> bool:
         if self.is_directed:
-            pass
+            raise Exception("Not implemented for directed graph")
         else:
             if self.is_connected():
                 for d in self.deg().values():
@@ -141,4 +147,46 @@ class AbstractGraph(metaclass=ABCMeta):
                 return True
             else:
                 return False
-        return True
+
+    def diameter(self) -> int:
+        """
+        Returns the diameter of connceted graph
+        """
+        if self.is_directed:
+            raise Exception("Not implemented for directed graph")
+        if self.is_connected():
+
+            def _bfs(
+                graph: AbstractGraph,
+                origin: Union[str, int],
+            ):
+                edge_counter = 0
+                visited_ = set()
+                visited_.add(origin)
+                queue = deque()
+                e = edge(origin, origin, 0, None)
+                signal_edge = edge(-1, -1, 0, None)
+                queue.append(e)
+                queue.appendleft(signal_edge)
+                while len(queue) != 1:
+                    curr_edge = queue.pop()
+                    if curr_edge == signal_edge:
+                        edge_counter += 1
+                        queue.appendleft(signal_edge)
+                        continue
+                    for e in graph.get_adj_edges(curr_edge.dst):
+                        if e.dst not in visited_:
+                            queue.appendleft(e)
+                            visited_.add(e.dst)
+                return edge_counter
+
+            diameter = 0
+            for v in self.vertexes:
+                d = _bfs(self, v.name)
+                if d > diameter:
+                    diameter = d
+            return diameter
+        else:
+            raise GraphTypeException(
+                "Cannot calculate diameter for not connected graph"
+            )

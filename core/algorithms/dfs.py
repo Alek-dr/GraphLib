@@ -6,7 +6,9 @@ from core.graphs.walk import Walk
 
 
 def dfs(
-    graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None
+    graph: AbstractGraph,
+    origin: Union[str, int],
+    target: Union[str, int] = None,
 ) -> Dict[Union[int, str], Walk]:
     """
     DFS algorithm

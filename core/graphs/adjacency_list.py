@@ -62,7 +62,9 @@ class AdjListGraph(AbstractGraph):
                     self.adj_list[edge_.src].remove(edge_)
                     if not self.directed:
                         self.adj_list[edge_.dst].remove(
-                            edge(edge_.dst, edge_.src, edge_.weight, edge_.name)
+                            edge(
+                                edge_.dst, edge_.src, edge_.weight, edge_.name
+                            )
                         )
                     found = True
                     break
@@ -90,7 +92,9 @@ class AdjListGraph(AbstractGraph):
             else:
                 candidates = [node for node in childs if node.dst == dst]
                 if len(candidates) > 1:
-                    raise EdgeRemoveError(f"Found more then 1 edge: {candidates}")
+                    raise EdgeRemoveError(
+                        f"Found more then 1 edge: {candidates}"
+                    )
                 elif len(candidates) == 0:
                     raise EdgeRemoveError(
                         f"Cannot find edge with src = {src}, dst = {dst}"
@@ -129,7 +133,9 @@ class AdjListGraph(AbstractGraph):
             else:
                 e = self._edge_exists(name)
                 if e is not None:
-                    raise EdgeAddError(f"Edge with name '{name}' already exists: {e}")
+                    raise EdgeAddError(
+                        f"Edge with name '{name}' already exists: {e}"
+                    )
             self.adj_list[src].append(edge(src, dst, weight, name))
             if not self.directed:
                 self.adj_list[dst].append(edge(dst, src, weight, name))

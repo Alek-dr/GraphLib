@@ -16,3 +16,7 @@ class VertexException(Exception):
 
 class VertexNotFound(VertexException):
     pass
+
+
+class GraphTypeException(Exception):
+    pass

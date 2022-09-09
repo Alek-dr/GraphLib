@@ -7,7 +7,10 @@ from tests.conftest import graph_2
 
 def check_edge_not_exists(graph, src, dst):
     assert all(
-        [not ((edge.src == src) and (edge.dst == dst)) for edge in graph.get_edges()]
+        [
+            not ((edge.src == src) and (edge.dst == dst))
+            for edge in graph.get_edges()
+        ]
     )
 
 

@@ -2,10 +2,30 @@ from typing import Callable
 
 import pytest
 import networkx as nx
+from networkx.exception import NetworkXError
 
+from core.exceptions import GraphTypeException
 from core.graphs import GraphType, create_graph
-from tests.conftest import graph_1, graph_8, graph_8_2, graph_9, graph_2, graph_3_1, graph_3_2, graph_4_1, graph_4_2, \
-    graph_5, graph_6, graph_7, create_nxgraph, graph_10, graph_11, graph_12
+from tests.conftest import (
+    graph_1,
+    graph_8,
+    graph_8_2,
+    graph_9,
+    graph_2,
+    graph_3_1,
+    graph_3_2,
+    graph_4_1,
+    graph_4_2,
+    graph_5,
+    graph_6,
+    graph_7,
+    create_nxgraph,
+    graph_10,
+    graph_11,
+    graph_12,
+)
+
+# region Check vertex degree
 
 
 def check_degree_sum(graph):
@@ -72,6 +92,11 @@ def test_graph_9():
     check_degree_sum(graph)
 
 
+# endregion
+
+# region Check undirected graph properties: connected, diameter, eulerian
+
+
 @pytest.mark.parametrize(
     "f_graph, graph_type, directed, weighted",
     [
@@ -90,37 +115,61 @@ def test_graph_9():
         [graph_7, GraphType.AdjList, False, False],
     ],
 )
-def test_is_connected_1(f_graph: Callable, graph_type: GraphType, directed: bool, weighted: bool):
+def test_not_directed_graph_1(
+    f_graph: Callable, graph_type: GraphType, directed: bool, weighted: bool
+):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = f_graph(graph)
     nx_graph = create_nxgraph(graph)
+    assert graph.is_eulerian() == nx.is_eulerian(nx_graph)
     assert nx.is_connected(nx_graph) == graph.is_connected()
+    try:
+        nx.diameter(nx_graph)
+    except NetworkXError:
+        with pytest.raises(GraphTypeException):
+            graph.diameter()
+    else:
+        assert nx.diameter(nx_graph) == graph.diameter()
 
 
 @pytest.mark.parametrize(
     "f_graph",
-    [
-        graph_8, graph_8_2, graph_9, graph_10, graph_11, graph_12
-    ],
+    [graph_8, graph_8_2, graph_9, graph_10, graph_11, graph_12],
 )
-def test_is_connected_2(f_graph: Callable):
+def test_not_directed_graph_2(f_graph: Callable):
     graph = f_graph()
     if not graph.is_directed:
         nx_graph = create_nxgraph(graph)
         assert nx.is_connected(nx_graph) == graph.is_connected()
+        assert graph.is_eulerian() == nx.is_eulerian(nx_graph)
+        try:
+            nx.diameter(nx_graph)
+        except NetworkXError:
+            with pytest.raises(GraphTypeException):
+                graph.diameter()
+        else:
+            assert nx.diameter(nx_graph) == graph.diameter()
+
+
+# endregion
+
 
 def plot_nx():
     import matplotlib.pyplot as plt
     import matplotlib
 
-    matplotlib.use('tkagg')
+    matplotlib.use("tkagg")
     graph = graph_8()
     nx_graph = create_nxgraph(graph)
     conn = nx.is_connected(nx_graph)
-    nx.draw(nx_graph, with_labels=True, font_weight='bold')
+    nx.draw(nx_graph, with_labels=True, font_weight="bold")
     plt.show()
 
-if __name__ == '__main__':
-    g = graph_8()
-    g.is_connected()
 
+if __name__ == "__main__":
+    g = graph_8()
+    nx_graph = create_nxgraph(g)
+    dnx = nx.diameter(nx_graph)
+    print(dnx)
+    d = g.diameter()
+    print(d)

@@ -4,7 +4,11 @@ from typing import Generator, Set, Union
 from core.graphs.graph import AbstractGraph, edge
 
 
-def _dfs(graph: AbstractGraph, origin: Union[str, int], target: Union[str, int] = None):
+def _dfs(
+    graph: AbstractGraph,
+    origin: Union[str, int],
+    target: Union[str, int] = None,
+):
     if (target is not None) and (not graph[target]):
         raise Exception("There no target node in graph")
     if origin == target:

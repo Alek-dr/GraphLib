@@ -35,7 +35,7 @@ def bellman_ford(
     i = 0
     while len(queue) != 1 and i < graph.n_vertex:
         curr_edge = queue.popleft()
-        if (curr_edge.src == -1) and (curr_edge.dst == -1):
+        if curr_edge == signal_edge:
             i += 1
             queue.append(signal_edge)
         else:

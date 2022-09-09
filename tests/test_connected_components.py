@@ -5,9 +5,20 @@ import pytest
 
 from core.graphs import GraphType, create_graph
 from core.graphs.graph import AbstractGraph
-from tests.conftest import (create_nxgraph, graph_1, graph_2, graph_3_1,
-                            graph_3_2, graph_4_1, graph_4_2, graph_5, graph_6,
-                            graph_7, graph_8, graph_12)
+from tests.conftest import (
+    create_nxgraph,
+    graph_1,
+    graph_2,
+    graph_3_1,
+    graph_3_2,
+    graph_4_1,
+    graph_4_2,
+    graph_5,
+    graph_6,
+    graph_7,
+    graph_8,
+    graph_12,
+)
 
 
 def get_components(graph: AbstractGraph):

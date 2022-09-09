@@ -2,8 +2,16 @@ import pytest
 
 from core.algorithms import bellman_ford
 from core.graphs import GraphType, create_graph
-from tests.conftest import (graph_3_1, graph_3_2, graph_4_1, graph_4_2,
-                            graph_5, graph_6, graph_7, graph_11)
+from tests.conftest import (
+    graph_3_1,
+    graph_3_2,
+    graph_4_1,
+    graph_4_2,
+    graph_5,
+    graph_6,
+    graph_7,
+    graph_11,
+)
 
 
 @pytest.mark.parametrize(

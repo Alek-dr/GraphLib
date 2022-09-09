@@ -6,7 +6,10 @@ from core.graphs.graph import AbstractGraph
 
 
 def create_nxgraph(graph: AbstractGraph) -> nx.Graph:
-    G = nx.MultiGraph()
+    if graph.is_directed:
+        G = nx.MultiDiGraph()
+    else:
+        G = nx.MultiGraph()
     for v in graph.vertexes:
         G.add_node(v.name)
     for edge in graph.get_edges():
