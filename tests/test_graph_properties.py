@@ -4,6 +4,7 @@ import pytest
 import networkx as nx
 from networkx.exception import NetworkXError
 
+from core.algorithms.graph_properties import *
 from core.exceptions import GraphTypeException
 from core.graphs import GraphType, create_graph
 from tests.conftest import (
@@ -121,15 +122,18 @@ def test_not_directed_graph_1(
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
     graph = f_graph(graph)
     nx_graph = create_nxgraph(graph)
-    assert graph.is_eulerian() == nx.is_eulerian(nx_graph)
-    assert nx.is_connected(nx_graph) == graph.is_connected()
+    assert is_eulerian(graph) == nx.is_eulerian(nx_graph)
+    assert nx.is_connected(nx_graph) == is_connected(graph)
     try:
         nx.diameter(nx_graph)
     except NetworkXError:
         with pytest.raises(GraphTypeException):
-            graph.diameter()
+            diameter(graph)
+        with pytest.raises(GraphTypeException):
+            radius(graph)
     else:
-        assert nx.diameter(nx_graph) == graph.diameter()
+        assert nx.diameter(nx_graph) == diameter(graph)
+        assert nx.radius(nx_graph) == radius(graph)
 
 
 @pytest.mark.parametrize(
@@ -140,15 +144,18 @@ def test_not_directed_graph_2(f_graph: Callable):
     graph = f_graph()
     if not graph.is_directed:
         nx_graph = create_nxgraph(graph)
-        assert nx.is_connected(nx_graph) == graph.is_connected()
-        assert graph.is_eulerian() == nx.is_eulerian(nx_graph)
+        assert nx.is_connected(nx_graph) == is_connected(graph)
+        assert is_eulerian(graph) == nx.is_eulerian(nx_graph)
         try:
             nx.diameter(nx_graph)
         except NetworkXError:
             with pytest.raises(GraphTypeException):
-                graph.diameter()
+                diameter(graph)
+            with pytest.raises(GraphTypeException):
+                radius(graph)
         else:
-            assert nx.diameter(nx_graph) == graph.diameter()
+            assert nx.diameter(nx_graph) == diameter(graph)
+            assert nx.radius(nx_graph) == radius(graph)
 
 
 # endregion
@@ -169,7 +176,7 @@ def plot_nx():
 if __name__ == "__main__":
     g = graph_8()
     nx_graph = create_nxgraph(g)
-    dnx = nx.diameter(nx_graph)
+    dnx = nx.radius(nx_graph)
     print(dnx)
-    d = g.diameter()
+    d = radius(g)
     print(d)

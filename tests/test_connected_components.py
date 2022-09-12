@@ -3,6 +3,7 @@ from typing import Callable
 import networkx as nx
 import pytest
 
+from core.algorithms.connected_components import connected_components
 from core.graphs import GraphType, create_graph
 from core.graphs.graph import AbstractGraph
 from tests.conftest import (
@@ -29,7 +30,7 @@ def get_components(graph: AbstractGraph):
         nx_components.add(frozenset(cc))
 
     components = set()
-    for cc in graph.connected_components():
+    for cc in connected_components(graph):
         components.add((frozenset(cc)))
     return nx_components, components
 
