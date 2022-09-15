@@ -7,12 +7,13 @@ from core.graphs.walk import Walk
 
 
 def bellman_ford(
-    graph: AbstractGraph, origin: Union[str, int]
+    graph: AbstractGraph, origin: Union[str, int], use_weights: bool = True
 ) -> Tuple[Dict[Union[int, str], Walk], bool]:
     """
     Bellman–Ford algorithm
     :param graph: graph object
     :param origin: name or id of origin node
+    :param: if use weights is False, consider graph as unweighted
     :return: dict of paths, ncc value true, if graph has no negative-weight cycle, false otherwise
     """
     if not graph[origin]:
@@ -41,11 +42,19 @@ def bellman_ford(
         else:
             inqueue[curr_edge.dst] = False
             for e in graph.get_adj_edges(curr_edge.dst):
-                d = walks[e.src].weight + e.weight
-                if walks[e.dst].weight > d:
-                    walks = update_walks(walks, e, d)
-                    if not inqueue[e.dst]:
-                        queue.append(e)
-                        inqueue[e.dst] = True
+                if use_weights:
+                    walks = _bf_core(e, inqueue, queue, walks, e.weight)
+                else:
+                    walks = _bf_core(e, inqueue, queue, walks, 1)
     ncc = i < graph.n_vertex
     return walks, ncc
+
+
+def _bf_core(e, inqueue, queue, walks, weight):
+    d = walks[e.src].weight + weight
+    if walks[e.dst].weight > d:
+        walks = update_walks(walks, e, d)
+        if not inqueue[e.dst]:
+            queue.append(e)
+            inqueue[e.dst] = True
+    return walks

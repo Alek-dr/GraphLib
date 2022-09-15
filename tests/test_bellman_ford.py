@@ -22,7 +22,7 @@ from tests.conftest import (
 )
 def test_bellman_ford_3_1(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_3_1(graph)
+    graph = graph_3_1(graph, weighted=True)
     paths, ncc = bellman_ford(graph, "A")
     assert ncc
     assert paths["A"].vertexes == ["A"]
@@ -122,7 +122,7 @@ def test_bellman_ford_3_1(graph_type: GraphType):
 )
 def test_bellman_ford_3_2(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_3_2(graph)
+    graph = graph_3_2(graph, weighted=True)
     paths, ncc = bellman_ford(graph, "A")
     assert ncc
     assert paths["A"].vertexes == ["A"]
@@ -222,7 +222,7 @@ def test_bellman_ford_3_2(graph_type: GraphType):
 )
 def test_bellman_ford_4_1(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_4_1(graph)
+    graph = graph_4_1(graph, weighted=True)
     paths, ncc = bellman_ford(graph, "A")
     assert ncc
     assert paths["A"].vertexes == ["A"]
@@ -297,7 +297,7 @@ def test_bellman_ford_4_1(graph_type: GraphType):
 )
 def test_bellman_ford_4_2(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_4_2(graph)
+    graph = graph_4_2(graph, weighted=True)
     paths, ncc = bellman_ford(graph, "A")
     assert ncc
     assert paths["A"].vertexes == ["A"]
@@ -397,7 +397,7 @@ def test_bellman_ford_4_2(graph_type: GraphType):
 )
 def test_bellman_ford_5(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_5(graph)
+    graph = graph_5(graph, weighted=True)
     paths, ncc = bellman_ford(graph, "A")
     assert ncc
 
@@ -452,7 +452,7 @@ def test_bellman_ford_5(graph_type: GraphType):
 )
 def test_bellman_ford_6(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_6(graph)
+    graph = graph_6(graph, weighted=True)
     paths, ncc = bellman_ford(graph, "A")
     assert ncc
     assert paths["A"].vertexes == ["A"]
@@ -510,7 +510,7 @@ def test_bellman_ford_7(graph_type: GraphType, directed, weighted):
 
 
 def test_bellman_ford_11():
-    graph = graph_11()
+    graph = graph_11(weighted=True)
     paths, ncc = bellman_ford(graph, 0)
     assert not ncc
     assert paths[0].vertexes == [0]

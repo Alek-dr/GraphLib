@@ -17,7 +17,7 @@ def create_nxgraph(graph: AbstractGraph) -> nx.Graph:
     return G
 
 
-def graph_1(graph):
+def graph_1(graph, weighted=False):
     """
     https://ru.wikipedia.org/wiki/Поиск_в_ширину
     """
@@ -55,7 +55,7 @@ def graph_1(graph):
     return graph
 
 
-def graph_2(graph) -> AbstractGraph:
+def graph_2(graph, weighted=False) -> AbstractGraph:
     """
     Грокаем алгоритмы. стр.137, 6.1
     """
@@ -83,7 +83,7 @@ def graph_2(graph) -> AbstractGraph:
     return graph
 
 
-def graph_3_1(graph) -> AbstractGraph:
+def graph_3_1(graph, weighted=False) -> AbstractGraph:
     """
     Граф из "Грокаем алгоритмы. Алгоритм Дейкстры" стр.181"
     """
@@ -101,19 +101,30 @@ def graph_3_1(graph) -> AbstractGraph:
     graph.add_node(nodeD)
     graph.add_node(nodeF)
 
-    graph.add_edge("A", "C", 2)
-    graph.add_edge("A", "B", 5)
-    graph.add_edge("B", "D", 4)
-    graph.add_edge("B", "E", 2)
-    graph.add_edge("C", "B", 8)
-    graph.add_edge("C", "E", 7)
-    graph.add_edge("D", "F", 3)
-    graph.add_edge("D", "E", 6)
-    graph.add_edge("E", "F", 1)
+    if weighted:
+        graph.add_edge("A", "C", 2)
+        graph.add_edge("A", "B", 5)
+        graph.add_edge("B", "D", 4)
+        graph.add_edge("B", "E", 2)
+        graph.add_edge("C", "B", 8)
+        graph.add_edge("C", "E", 7)
+        graph.add_edge("D", "F", 3)
+        graph.add_edge("D", "E", 6)
+        graph.add_edge("E", "F", 1)
+    else:
+        graph.add_edge("A", "C")
+        graph.add_edge("A", "B")
+        graph.add_edge("B", "D")
+        graph.add_edge("B", "E")
+        graph.add_edge("C", "B")
+        graph.add_edge("C", "E")
+        graph.add_edge("D", "F")
+        graph.add_edge("D", "E")
+        graph.add_edge("E", "F")
     return graph
 
 
-def graph_3_2(graph):
+def graph_3_2(graph, weighted=False):
     """
     Граф 3_1, изменен путь B->D на D->B. В D попасть невозможно
     """
@@ -131,19 +142,30 @@ def graph_3_2(graph):
     graph.add_node(nodeE)
     graph.add_node(nodeF)
 
-    graph.add_edge("A", "B", 5)
-    graph.add_edge("A", "C", 2)
-    graph.add_edge("B", "E", 2)
-    graph.add_edge("C", "B", 8)
-    graph.add_edge("C", "E", 7)
-    graph.add_edge("D", "F", 3)
-    graph.add_edge("D", "B", 4)
-    graph.add_edge("D", "E", 6)
-    graph.add_edge("E", "F", 1)
+    if weighted:
+        graph.add_edge("A", "B", 5)
+        graph.add_edge("A", "C", 2)
+        graph.add_edge("B", "E", 2)
+        graph.add_edge("C", "B", 8)
+        graph.add_edge("C", "E", 7)
+        graph.add_edge("D", "F", 3)
+        graph.add_edge("D", "B", 4)
+        graph.add_edge("D", "E", 6)
+        graph.add_edge("E", "F", 1)
+    else:
+        graph.add_edge("A", "B")
+        graph.add_edge("A", "C")
+        graph.add_edge("B", "E")
+        graph.add_edge("C", "B")
+        graph.add_edge("C", "E")
+        graph.add_edge("D", "F")
+        graph.add_edge("D", "B")
+        graph.add_edge("D", "E")
+        graph.add_edge("E", "F")
     return graph
 
 
-def graph_4_1(graph):
+def graph_4_1(graph, weighted=False):
     """
     Граф из "Грокаем алгоритмы. Алгоритм Дейкстры" стр.181"
     """
@@ -158,16 +180,22 @@ def graph_4_1(graph):
     graph.add_node(nodeC)
     graph.add_node(nodeD)
     graph.add_node(nodeE)
-
-    graph.add_edge("A", "B", 10)
-    graph.add_edge("B", "C", 20)
-    graph.add_edge("C", "D", 1)
-    graph.add_edge("D", "B", 1)
-    graph.add_edge("C", "E", 30)
+    if weighted:
+        graph.add_edge("A", "B", 10)
+        graph.add_edge("B", "C", 20)
+        graph.add_edge("C", "D", 1)
+        graph.add_edge("D", "B", 1)
+        graph.add_edge("C", "E", 30)
+    else:
+        graph.add_edge("A", "B")
+        graph.add_edge("B", "C")
+        graph.add_edge("C", "D")
+        graph.add_edge("D", "B")
+        graph.add_edge("C", "E")
     return graph
 
 
-def graph_4_2(graph):
+def graph_4_2(graph, weighted=False):
     """
     Граф 4.1, добавлена вершина F и ребра C->F, F->E, D<->F
     """
@@ -184,20 +212,30 @@ def graph_4_2(graph):
     graph.add_node(nodeD)
     graph.add_node(nodeE)
     graph.add_node(nodeF)
-
-    graph.add_edge("A", "B", 10)
-    graph.add_edge("B", "C", 20)
-    graph.add_edge("C", "D", 1)
-    graph.add_edge("D", "B", 1)
-    graph.add_edge("C", "E", 30)
-    graph.add_edge("C", "F", 10)
-    graph.add_edge("F", "E", 5)
-    graph.add_edge("D", "F", 2)
-    graph.add_edge("F", "D", 2)
+    if weighted:
+        graph.add_edge("A", "B", 10)
+        graph.add_edge("B", "C", 20)
+        graph.add_edge("C", "D", 1)
+        graph.add_edge("D", "B", 1)
+        graph.add_edge("C", "E", 30)
+        graph.add_edge("C", "F", 10)
+        graph.add_edge("F", "E", 5)
+        graph.add_edge("D", "F", 2)
+        graph.add_edge("F", "D", 2)
+    else:
+        graph.add_edge("A", "B")
+        graph.add_edge("B", "C")
+        graph.add_edge("C", "D")
+        graph.add_edge("D", "B")
+        graph.add_edge("C", "E")
+        graph.add_edge("C", "F")
+        graph.add_edge("F", "E")
+        graph.add_edge("D", "F")
+        graph.add_edge("F", "D")
     return graph
 
 
-def graph_5(graph):
+def graph_5(graph, weighted=False):
     nodeA = Node("A")
     nodeB = Node("B")
     nodeC = Node("C")
@@ -208,15 +246,22 @@ def graph_5(graph):
     graph.add_node(nodeC)
     graph.add_node(nodeD)
 
-    graph.add_edge("A", "B", 2)
-    graph.add_edge("A", "D", 3)
-    graph.add_edge("A", "C", 1)
-    graph.add_edge("B", "C", 4)
-    graph.add_edge("C", "A", 1)
+    if weighted:
+        graph.add_edge("A", "B", 2)
+        graph.add_edge("A", "D", 3)
+        graph.add_edge("A", "C", 1)
+        graph.add_edge("B", "C", 4)
+        graph.add_edge("C", "A", 1)
+    else:
+        graph.add_edge("A", "B")
+        graph.add_edge("A", "D")
+        graph.add_edge("A", "C")
+        graph.add_edge("B", "C")
+        graph.add_edge("C", "A")
     return graph
 
 
-def graph_6(graph):
+def graph_6(graph, weighted=False):
     nodeA = Node("A")
     nodeB = Node("B")
     nodeC = Node("C")
@@ -224,14 +269,18 @@ def graph_6(graph):
     graph.add_node(nodeA)
     graph.add_node(nodeB)
     graph.add_node(nodeC)
-
-    graph.add_edge("A", "B", 2)
-    graph.add_edge("B", "B", 3)
-    graph.add_edge("B", "C", 2)
+    if weighted:
+        graph.add_edge("A", "B", 2)
+        graph.add_edge("B", "B", 3)
+        graph.add_edge("B", "C", 2)
+    else:
+        graph.add_edge("A", "B")
+        graph.add_edge("B", "B")
+        graph.add_edge("B", "C")
     return graph
 
 
-def graph_7(graph):
+def graph_7(graph, weighted=False):
     """
     Грокаем алгоритмы. стр.138, 6.2
     """
@@ -260,7 +309,7 @@ def graph_7(graph):
     return graph
 
 
-def graph_8():
+def graph_8(weighted=False):
     graph = create_graph(directed=False, weighted=False)
     node1 = Node(1)
     node2 = Node(2)
@@ -283,7 +332,7 @@ def graph_8():
     return graph
 
 
-def graph_8_2():
+def graph_8_2(weighted=False):
     graph = create_graph(directed=True)
     node1 = Node(1)
     node2 = Node(2)
@@ -306,7 +355,7 @@ def graph_8_2():
     return graph
 
 
-def graph_9():
+def graph_9(weighted=False):
     graph = create_graph(directed=True)
     node1 = Node(1)
     node2 = Node(2)
@@ -322,7 +371,7 @@ def graph_9():
     return graph
 
 
-def graph_10():
+def graph_10(weighted=False):
     """Алгоритмы для начинающих. Стр. 196"""
     graph = create_graph(directed=True, weighted=False)
     zero = Node(0)
@@ -363,7 +412,7 @@ def graph_10():
     return graph
 
 
-def graph_11():
+def graph_11(weighted=False):
     """Алгоритмы для начинающих. Стр. 253"""
     graph = create_graph(directed=True, weighted=True)
     zero = Node(0)
@@ -378,17 +427,26 @@ def graph_11():
     graph.add_node(three)
     graph.add_node(four)
 
-    graph.add_edge(0, 1, 1)
-    graph.add_edge(1, 2, 2)
-    graph.add_edge(2, 3, 3)
-    graph.add_edge(2, 3, 3)
-    graph.add_edge(3, 1, -6)
-    graph.add_edge(3, 4, 4)
-    graph.add_edge(4, 0, 5)
+    if weighted:
+        graph.add_edge(0, 1, 1)
+        graph.add_edge(1, 2, 2)
+        graph.add_edge(2, 3, 3)
+        graph.add_edge(2, 3, 3)
+        graph.add_edge(3, 1, -6)
+        graph.add_edge(3, 4, 4)
+        graph.add_edge(4, 0, 5)
+    else:
+        graph.add_edge(0, 1)
+        graph.add_edge(1, 2)
+        graph.add_edge(2, 3)
+        graph.add_edge(2, 3)
+        graph.add_edge(3, 1)
+        graph.add_edge(3, 4)
+        graph.add_edge(4, 0)
     return graph
 
 
-def graph_12():
+def graph_12(weighted=False):
     """
     https://ru.wikipedia.org/wiki/Компонента_связности_графа
     """

@@ -7,6 +7,7 @@ from networkx.exception import NetworkXError
 from core.algorithms.graph_properties import *
 from core.exceptions import GraphTypeException
 from core.graphs import GraphType, create_graph
+from core.visualization import save_graph_img
 from tests.conftest import (
     graph_1,
     graph_8,
@@ -25,6 +26,7 @@ from tests.conftest import (
     graph_11,
     graph_12,
 )
+
 
 # region Check vertex degree
 
@@ -95,7 +97,7 @@ def test_graph_9():
 
 # endregion
 
-# region Check undirected graph properties: connected, diameter, eulerian
+# region Check undirected graph properties: connected, diameter, eulerian, radius, centers
 
 
 @pytest.mark.parametrize(
@@ -120,7 +122,7 @@ def test_not_directed_graph_1(
     f_graph: Callable, graph_type: GraphType, directed: bool, weighted: bool
 ):
     graph = create_graph(graph_type, directed=directed, weighted=weighted)
-    graph = f_graph(graph)
+    graph = f_graph(graph, weighted=weighted)
     nx_graph = create_nxgraph(graph)
     assert is_eulerian(graph) == nx.is_eulerian(nx_graph)
     assert nx.is_connected(nx_graph) == is_connected(graph)
@@ -133,7 +135,9 @@ def test_not_directed_graph_1(
             radius(graph)
     else:
         assert nx.diameter(nx_graph) == diameter(graph)
-        assert nx.radius(nx_graph) == radius(graph)
+        r, centers = radius(graph)
+        assert nx.radius(nx_graph) == r
+        assert frozenset(nx.center(nx_graph)) == frozenset(centers)
 
 
 @pytest.mark.parametrize(
@@ -155,7 +159,9 @@ def test_not_directed_graph_2(f_graph: Callable):
                 radius(graph)
         else:
             assert nx.diameter(nx_graph) == diameter(graph)
-            assert nx.radius(nx_graph) == radius(graph)
+            r, centers = radius(graph)
+            assert nx.radius(nx_graph) == r
+            assert frozenset(nx.center(nx_graph)) == frozenset(centers)
 
 
 # endregion
@@ -174,9 +180,11 @@ def plot_nx():
 
 
 if __name__ == "__main__":
-    g = graph_8()
+    graph = create_graph(GraphType.AdjList, directed=False, weighted=True)
+    g = graph_3_1(graph, weighted=False)
     nx_graph = create_nxgraph(g)
     dnx = nx.radius(nx_graph)
-    print(dnx)
-    d = radius(g)
-    print(d)
+    r, c = radius(g)
+    centers = nx.center(nx_graph)
+    print()
+    # save_graph_img(g, "graph_31", f"../tests/graph_images/graph_3_1.png")

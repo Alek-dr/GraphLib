@@ -1,5 +1,5 @@
 from collections import deque
-from typing import Generator, Set, Union
+from typing import Generator, Set, Union, Tuple
 
 from core.algorithms import bellman_ford
 from core.exceptions import GraphTypeException
@@ -125,7 +125,15 @@ def _get_radius(matrix):
     return min(max_)
 
 
-def radius(graph: AbstractGraph) -> int:
+def _get_centers(v_names, matrix, r):
+    c = set()
+    for i, row in enumerate(matrix):
+        if max(row) <= r:
+            c.add(v_names[i])
+    return c
+
+
+def radius(graph: AbstractGraph) -> Tuple[int, Set[Union[int, str]]]:
     """
     Returns the radius of connceted graph
     """
@@ -136,10 +144,12 @@ def radius(graph: AbstractGraph) -> int:
     dist_matrix = []
     v_names = sorted([v.name for v in graph.vertexes])
     for v in v_names:
-        walks, _ = bellman_ford(graph, v)
+        walks, _ = bellman_ford(graph, v, use_weights=False)
         row = []
         for name in v_names:
             length = walks.get(name).length()
             row.append(length)
         dist_matrix.append(row)
-    return _get_radius(dist_matrix)
+    r = _get_radius(dist_matrix)
+    centers = _get_centers(v_names, dist_matrix, r)
+    return r, centers

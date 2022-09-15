@@ -21,7 +21,7 @@ from tests.conftest import (
 )
 def test_dijkstra_3_1(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_3_1(graph)
+    graph = graph_3_1(graph, weighted=True)
     paths = dijkstra(graph, "A")
     assert paths["A"].vertexes == ["A"]
     assert paths["A"].weight == 0
@@ -115,7 +115,7 @@ def test_dijkstra_3_1(graph_type: GraphType):
 )
 def test_dijkstra_3_2(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_3_2(graph)
+    graph = graph_3_2(graph, weighted=True)
     paths = dijkstra(graph, "A")
     assert paths["A"].vertexes == ["A"]
     assert paths["A"].weight == 0
@@ -209,7 +209,7 @@ def test_dijkstra_3_2(graph_type: GraphType):
 )
 def test_dijkstra_4_1(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_4_1(graph)
+    graph = graph_4_1(graph, weighted=True)
     paths = dijkstra(graph, "A")
     assert paths["A"].vertexes == ["A"]
     assert paths["A"].weight == 0
@@ -279,7 +279,7 @@ def test_dijkstra_4_1(graph_type: GraphType):
 )
 def test_dijkstra_4_2(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_4_2(graph)
+    graph = graph_4_2(graph, weighted=True)
     paths = dijkstra(graph, "A")
     assert paths["A"].vertexes == ["A"]
     assert paths["A"].weight == 0
@@ -373,7 +373,7 @@ def test_dijkstra_4_2(graph_type: GraphType):
 )
 def test_dijkstra_5(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_5(graph)
+    graph = graph_5(graph, weighted=True)
     paths = dijkstra(graph, "A")
 
     assert paths["A"].vertexes == ["A"]
@@ -424,7 +424,7 @@ def test_dijkstra_5(graph_type: GraphType):
 )
 def test_dijkstra_6(graph_type: GraphType):
     graph = create_graph(graph_type, directed=True, weighted=True)
-    graph = graph_6(graph)
+    graph = graph_6(graph, weighted=True)
     paths = dijkstra(graph, "A")
     assert paths["A"].vertexes == ["A"]
     assert paths["A"].weight == 0
