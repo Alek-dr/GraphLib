@@ -13,7 +13,7 @@ def bellman_ford(
     Bellman–Ford algorithm
     :param graph: graph object
     :param origin: name or id of origin node
-    :param: if use weights is False, consider graph as unweighted
+    :param use_weights: if use weights is False, consider graph as unweighted
     :return: dict of paths, ncc value true, if graph has no negative-weight cycle, false otherwise
     """
     if not graph[origin]:
