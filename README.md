@@ -4,7 +4,7 @@ Graph library
 
 Implementation of different graph algorithms and representations.
 
-Minimalistic pure-python graph algorythms implementation
+Minimalistic pure-python graph algorithms implementation
 
 Implemented algorytms:
 * DFS
