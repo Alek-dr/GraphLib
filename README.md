@@ -6,7 +6,7 @@ Implementation of different graph algorithms and representations.
 
 Minimalistic pure-python graph algorithms implementation
 
-Implemented algorytms:
+Implemented algoritms:
 * DFS
 * BFS
 * Dijkstra
